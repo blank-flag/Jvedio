@@ -101,15 +101,15 @@ namespace Jvedio
 
             //下载信息
             Movie movie = o as Movie;
-            if (movie.id.ToUpper().StartsWith("FC2")) 
-                SemaphoreFC2.WaitOne(); 
-            else 
+            if (movie.id.ToUpper().StartsWith("FC2"))
+                SemaphoreFC2.WaitOne();
+            else
                 Semaphore.WaitOne();//阻塞
             if (Cancel || string.IsNullOrEmpty(movie.id))
             {
-                if (movie.id.ToUpper().StartsWith("FC2")) 
-                    SemaphoreFC2.Release(); 
-                else 
+                if (movie.id.ToUpper().StartsWith("FC2"))
+                    SemaphoreFC2.Release();
+                else
                     Semaphore.Release();
                 return;
             }
@@ -119,8 +119,8 @@ namespace Jvedio
             if (movie.IsToDownLoadInfo() || enforce)
             {
                 //满足一定条件才下载信息
-                HttpResult httpResult = await MyNet.DownLoadFromNet(movie); 
-                if(httpResult!=null )
+                HttpResult httpResult = await MyNet.DownLoadFromNet(movie);
+                if (httpResult != null)
                 {
                     if (httpResult.Success)
                     {
@@ -175,9 +175,9 @@ namespace Jvedio
             InfoUpdate?.Invoke(this, new InfoUpdateEventArgs() { Movie = dm, progress = downLoadProgress.value, state = State, Success = true });//委托到主界面显示
             Task.Delay(Delay.MEDIUM).Wait();//每个线程之间暂停
             //取消阻塞
-            if (movie.id.ToUpper().IndexOf("FC2") >= 0) 
+            if (movie.id.ToUpper().IndexOf("FC2") >= 0)
                 SemaphoreFC2.Release();
-            else 
+            else
                 Semaphore.Release();
         }
     }
@@ -257,18 +257,17 @@ namespace Jvedio
                 {
                     Actress actress = item;
                     MySqlite db = new MySqlite("BusActress");
-                    if (item.id == "")
-                    {
-
+                    if (string.IsNullOrEmpty(item.id))
                         actress.id = db.GetInfoBySql($"select id from censored where name='{item.name}'");
-                        if (item.imageurl == null) { actress.imageurl = db.GetInfoBySql($"select smallpicurl from censored where id='{actress.id}'").Replace("javcdn.pw", "javcdn.net"); }
-
-                    }
-                    else
-                    {
-                        if (item.imageurl == null) { actress.imageurl = db.GetInfoBySql($"select smallpicurl from censored where id='{actress.id}'").Replace("javcdn.pw", "javcdn.net"); }
-                    }
                     db.CloseDB();
+                    if (string.IsNullOrEmpty(item.imageurl))
+                    {
+                        //TODO 没法解决演员头像骑兵和步兵的问题
+                        //默认骑兵吧，反正拍过步兵的肯定也拍过骑兵
+                        //拼接网址
+                        actress.imageurl = $"{JvedioServers.Bus.Url}pics/actress/{item.id}_a.jpg";
+                    }
+
                     actresslist.Add(actress);
                 }
             }
@@ -300,7 +299,7 @@ namespace Jvedio
                 if (!string.IsNullOrEmpty(actress.imageurl))
                 {
                     string url = actress.imageurl;
-                    HttpResult streamResult= await new MyNet().DownLoadFile(url);
+                    HttpResult streamResult = await new MyNet().DownLoadFile(url);
                     if (streamResult != null)
                     {
                         ImageProcess.SaveImage(actress.name, streamResult.FileByte, ImageType.ActorImage, url);
@@ -340,8 +339,8 @@ namespace Jvedio
 
     public class ProgressBUpdateEventArgs : EventArgs
     {
-        public double value=0;
-        public double maximum=0;
+        public double value = 0;
+        public double maximum = 0;
     }
 
     public class ProgressBarUpdate

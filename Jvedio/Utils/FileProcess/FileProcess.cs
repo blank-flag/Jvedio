@@ -87,6 +87,7 @@ namespace Jvedio
 
         public static void SaveInfo(Dictionary<string, string> Info, string id, int vt = 1)
         {
+            if (Info == null || string.IsNullOrEmpty(id)) return;
             //保存信息
             if (!Info.ContainsKey("id")) Info.Add("id", id);
             if (!Info.ContainsKey("vediotype")) Info.Add("vediotype", vt.ToString());
@@ -118,7 +119,7 @@ namespace Jvedio
             if (Directory.Exists(Properties.Settings.Default.NFOSavePath))
             {
                 //固定位置
-                string savepath = Path.Combine(Properties.Settings.Default.NFOSavePath, $"{detailMovie.id}.nfo");
+                string savepath = Path.Combine(Properties.Settings.Default.NFOSavePath, $"{detailMovie.id.ToProperFileName()}.nfo");
                 if (!File.Exists(savepath))
                     NFOHelper.SaveToNFO(detailMovie, savepath);
                 else if (Properties.Settings.Default.OverriteNFO)
@@ -130,7 +131,7 @@ namespace Jvedio
                 string path = detailMovie.filepath;
                 if (File.Exists(path))
                 {
-                    string savepath = Path.Combine(new FileInfo(path).DirectoryName, $"{detailMovie.id}.nfo");
+                    string savepath = Path.Combine(new FileInfo(path).DirectoryName, $"{detailMovie.id.ToProperFileName()}.nfo");
                     if (!File.Exists(savepath))
                         NFOHelper.SaveToNFO(detailMovie, savepath);
                     else if (Properties.Settings.Default.OverriteNFO)
@@ -147,8 +148,8 @@ namespace Jvedio
         /// <param name="dateTime"></param>
         public static void ClearDateBefore(int day)
         {
-            DateTime dateTime = DateTime.Now.AddDays(day);
             if (!File.Exists("RecentWatch")) return;
+            DateTime dateTime = DateTime.Now.AddDays(day);
             RecentWatchedConfig recentWatchedConfig = new RecentWatchedConfig();
             for (int i = 1; i < 60; i++)
             {
@@ -166,8 +167,8 @@ namespace Jvedio
         public static List<Movie> FilterMovie(List<Movie> movies)
         {
             List<Movie> result = new List<Movie>();
+            if (movies == null || movies.Count == 0) return result;
             result.AddRange(movies);
-
             //可播放|不可播放
             if (Properties.Settings.Default.OnlyShowPlay)
             {
@@ -206,9 +207,8 @@ namespace Jvedio
         private static List<Movie> FilterImage(List<Movie> originMovies)
         {
             List<Movie> result = new List<Movie>();
+            if (originMovies == null || originMovies.Count == 0) return result;
             result.AddRange(originMovies);
-
-
             int.TryParse(Properties.Settings.Default.ShowViewMode, out int idx);
             ViewType ShowViewMode = (ViewType)idx;
             MyImageType ShowImageMode = MyImageType.缩略图;
@@ -309,9 +309,11 @@ namespace Jvedio
         public static Movie GetInfoFromNfo(string path)
         {
             XmlDocument doc = new XmlDocument();
+            XmlNode rootNode = null;
             try
             {
                 doc.Load(path);
+                rootNode = doc.SelectSingleNode("movie");
             }
             catch (Exception ex)
             {
@@ -319,8 +321,7 @@ namespace Jvedio
                 Console.WriteLine(ex.Message);
                 return null;
             }
-            XmlNode rootNode = doc.SelectSingleNode("movie");
-            if (rootNode == null) return null;
+            if (rootNode == null || rootNode.ChildNodes == null || rootNode.ChildNodes.Count == 0) return null;
             Movie movie = new Movie();
             foreach (XmlNode node in rootNode.ChildNodes)
             {
@@ -354,10 +355,8 @@ namespace Jvedio
                 }
             }
             if (string.IsNullOrEmpty(movie.id)) return null;
-
             //视频类型
             movie.vediotype = (int)Identify.GetVideoType(movie.id);
-
             //扫描视频获得文件大小
             if (File.Exists(path))
             {
@@ -463,8 +462,12 @@ namespace Jvedio
 
         public static void ByteArrayToFile(byte[] byteArray, string fileName)
         {
+            if (byteArray == null) return;
             try
             {
+                //这里仍然会抛出异常
+                //System.NullReferenceException:“未将对象引用设置到对象的实例。”
+                //byteArray 是 null。
                 using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                 {
                     fs.Write(byteArray, 0, byteArray.Length);

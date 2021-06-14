@@ -19,7 +19,7 @@ namespace Jvedio
 
         public static void Init()
         {
-            clientId = Properties.Settings.Default.Baidu_API_KEY.Replace(" ","");
+            clientId = Properties.Settings.Default.Baidu_API_KEY.Replace(" ", "");
             clientSecret = Properties.Settings.Default.Baidu_SECRET_KEY.Replace(" ", "");
         }
 
@@ -35,16 +35,15 @@ namespace Jvedio
             paraList.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
             paraList.Add(new KeyValuePair<string, string>("client_id", clientId));
             paraList.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
-
             HttpResponseMessage response = client.PostAsync(authHost, new FormUrlEncodedContent(paraList)).Result;
             string result = response.Content.ReadAsStringAsync().Result;
             //Console.WriteLine(result);
-            return GetValue(result, "access_token").Replace("\"","");
+            return GetValue(result, "access_token").Replace("\"", "");
         }
 
-        public static string  GetValue(string json, string key)
+        public static string GetValue(string json, string key)
         {
-           
+
             string result = ""; //解析失败的默认返回值
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             try
@@ -55,7 +54,7 @@ namespace Jvedio
                     result = serializer.Serialize(obj_json[key]);
                 }
             }
-            catch (Exception) {  }
+            catch (Exception) { }
 
             return result;
         }
@@ -66,7 +65,7 @@ namespace Jvedio
     {
 
         // 人脸检测与属性分析    https://cloud.baidu.com/doc/FACE/s/yk37c1u4t
-        public static string faceDetect(string token, Bitmap bitmap,string imagepath="")
+        public static string faceDetect(string token, Bitmap bitmap, string imagepath = "")
         {
             //string token = "[调用鉴权接口获取的token]";
             string host = "https://aip.baidubce.com/rest/2.0/face/v3/detect?access_token=" + token;
@@ -74,10 +73,10 @@ namespace Jvedio
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(host);
             request.Method = "post";
             request.KeepAlive = true;
-            string base64Str =ImageProcess. ImageToBase64(bitmap);
+            string base64Str = ImageProcess.ImageToBase64(bitmap);
             if (base64Str == null) return "";
             //Console.WriteLine(base64Str);
-            string str = "{\"image\":\"" + base64Str +   "\",\"image_type\":\"BASE64\",\"face_field\":\"age,beauty,expression,face_shape,gender,glasses,landmark,landmark150,race,quality,eye_status,emotion,face_type,mask,spoofing\",\"max_face_num\":1,\"face_type\":\"LIVE\",\"liveness_control\":\"NONE\"}";
+            string str = "{\"image\":\"" + base64Str + "\",\"image_type\":\"BASE64\",\"face_field\":\"age,beauty,expression,face_shape,gender,glasses,landmark,landmark150,race,quality,eye_status,emotion,face_type,mask,spoofing\",\"max_face_num\":1,\"face_type\":\"LIVE\",\"liveness_control\":\"NONE\"}";
             byte[] buffer = encoding.GetBytes(str);
             request.ContentLength = buffer.Length;
             request.GetRequestStream().Write(buffer, 0, buffer.Length);
@@ -123,7 +122,7 @@ namespace Jvedio
         public static string FaceJson;
 
 
-        public static (Dictionary<string, string>,Int32Rect) Parse(string json)
+        public static (Dictionary<string, string>, Int32Rect) Parse(string json)
         {
             Dictionary<string, string> dicresult = null;
             Int32Rect int32Rect = Int32Rect.Empty;
@@ -134,8 +133,8 @@ namespace Jvedio
             if (dict.ContainsKey("result"))
             {
                 Dictionary<string, object> result = dict["result"] as Dictionary<string, object>;
-                try { if ((bool)result?.ContainsKey("face_num")) facenum = uint.Parse(result["face_num"].ToString());  }catch { }
-                 if (facenum > 0)
+                try { if ((bool)result?.ContainsKey("face_num")) facenum = uint.Parse(result["face_num"].ToString()); } catch { }
+                if (facenum > 0)
                 {
 
                     object[] face_list_object = result["face_list"] as object[];
@@ -162,7 +161,7 @@ namespace Jvedio
                         dicresult.Add("emotion", emotion["type"].ToString());
                         dicresult.Add("mask", mask["type"].ToString());
 
-                        int32Rect= new Int32Rect((int)float.Parse(location["left"].ToString()), (int)float.Parse(location["top"].ToString()), (int)float.Parse(location["width"].ToString()), (int)float.Parse(location["height"].ToString())); ;
+                        int32Rect = new Int32Rect((int)float.Parse(location["left"].ToString()), (int)float.Parse(location["top"].ToString()), (int)float.Parse(location["width"].ToString()), (int)float.Parse(location["height"].ToString())); ;
                         return (dicresult, int32Rect);
                     }
 

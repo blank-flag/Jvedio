@@ -281,7 +281,7 @@
                     <Button Margin="20 10" HorizontalAlignment="Left"  Content="{x:Static lang:Resources.Add}" MinWidth="100" Style="{DynamicResource FlatButton}"  Click="NewServer" />
 
                     <Border Margin="20 5" Style="{StaticResource BorderTipInfo}" Background="{DynamicResource BackgroundMenu}">
-                        <TextBlock Text="{x:Static lang:Resources.Attention_UrlTest}" TextWrapping="Wrap" Foreground="{DynamicResource ForegroundGlobal}"/>
+                        <TextBlock Text="{x:Static lang:Resources.Attention_UrlTest}" TextWrapping="Wrap" Foreground="{DynamicResource ForegroundGlobal}" HorizontalAlignment="Left"/>
                     </Border>
 
 
@@ -298,7 +298,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn IsReadOnly="True"    Header="{x:Static lang:Resources.UrlName}" Width="auto" MinWidth="100" Binding="{Binding Name,Mode=OneWay}" >
+                            <DataGridTextColumn IsReadOnly="True"    Header="{x:Static lang:Resources.UrlName}" Width="auto" MinWidth="100" MaxWidth="300" Binding="{Binding Name,Mode=OneWay}" >
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="TextAlignment" Value="Left"></Setter>

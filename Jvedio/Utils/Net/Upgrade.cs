@@ -27,7 +27,7 @@ namespace Jvedio
         public static string list_url = "https://hitchao.github.io/jvedioupdate/list";
         public static string file_url = "https://hitchao.github.io/jvedioupdate/File/";
 
-        
+
         public void Start()
         {
             StopUpgrade = false;
@@ -43,12 +43,18 @@ namespace Jvedio
 
         private async Task<bool> GetDownLoadList()
         {
-            HttpResult httpResult = await new MyNet().Http(list_url);
-            if (httpResult == null || httpResult.SourceCode == "") return false;
+            HttpResult httpResult = null;
+            try { httpResult = await new MyNet().Http(list_url); }
+            catch (TimeoutException ex)
+            {
+                Logger.LogN(list_url + " => " + ex.Message);
+                return false;
+            }
+            if (httpResult == null || string.IsNullOrEmpty(httpResult.SourceCode)) return false;
             Dictionary<string, string> filemd5 = new Dictionary<string, string>();
             foreach (var item in httpResult.SourceCode.Split('\n'))
             {
-                if (!string.IsNullOrEmpty(item))
+                if (!string.IsNullOrEmpty(item) && item.IndexOf(' ') > 0)
                 {
                     string[] info = item.Split(' ');
                     if (!filemd5.ContainsKey(info[0])) filemd5.Add(info[0], info[1]);
@@ -87,7 +93,8 @@ namespace Jvedio
                     fs.Write(filebyte, 0, filebyte.Length);
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 Logger.LogF(ex);
             }
         }

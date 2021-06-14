@@ -865,7 +865,7 @@ namespace Jvedio
             StackPanel stackPanel = button.Parent as StackPanel;
             TextBlock textBlock = stackPanel.Children.OfType<TextBlock>().Last();
             string filepath = textBlock.Text;
-            PlayVedioWithPlayer(filepath, "");
+            PlayVideoWithPlayer(filepath, "");
         }
 
 
@@ -2069,7 +2069,7 @@ namespace Jvedio
             }
             else if (sortindex == 3)
             {
-                //GIF
+                //加载GIF
                 AsyncLoadGif();
             }
             else if (sortindex == 2)
@@ -2165,7 +2165,8 @@ namespace Jvedio
                 {
                     Movie movie = vieModel.CurrentMovieList[i];
                     string gifpath = System.IO.Path.Combine(BasePicPath, "GIF", $"{movie.id}.gif");
-                    if (movie.GifUri != null && movie.GifUri.OriginalString != "") continue;
+                    if (movie.GifUri != null && !string.IsNullOrEmpty(movie.GifUri.OriginalString) 
+                        && movie.GifUri.OriginalString.IndexOf("/NoPrinting_G.gif")<0) continue;
                     if (File.Exists(gifpath))
                         movie.GifUri = new Uri(gifpath);
                     else
@@ -2275,16 +2276,16 @@ namespace Jvedio
                 MovieScrollViewer.ScrollToTop();
         }
 
-        public void PlayVedio(object sender, MouseButtonEventArgs e)
+        public void PlayVideo(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement frameworkElement = sender as FrameworkElement;
             string id = frameworkElement.ToolTip.ToString();
             string filepath = DataBase.SelectInfoByID("filepath", "movie", id);
-            PlayVedioWithPlayer(filepath, id);
+            PlayVideoWithPlayer(filepath, id);
 
         }
 
-        public void PlayVedioWithPlayer(string filepath, string ID, string token = "")
+        public void PlayVideoWithPlayer(string filepath, string ID, string token = "")
         {
             if (token == "") token = GrowlToken;
             if (File.Exists(filepath))
@@ -3841,8 +3842,15 @@ namespace Jvedio
 
 
         DownLoadActress downLoadActress;
+
+        /// <summary>
+        /// 同步演员信息
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void StartDownLoadActress(object sender, RoutedEventArgs e)
         {
+            HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.ActressDownloadAttention, GrowlToken);
             DownloadActorPopup.IsOpen = false;
             if (!JvedioServers.Bus.IsEnable)
             {
@@ -3884,12 +3892,12 @@ namespace Jvedio
             {
                 for (int i = 0; i < movie.subsectionlist.Count; i++)
                 {
-                    string filepath = movie.subsectionlist[i];//这样可以，放在  PlayVedioWithPlayer 就超出索引
+                    string filepath = movie.subsectionlist[i];//这样可以，放在  PlayVideoWithPlayer 就超出索引
                     MenuItem menuItem = new MenuItem();
                     menuItem.Header = i + 1;
                     menuItem.Click += (s, _) =>
                     {
-                        PlayVedioWithPlayer(filepath, id);
+                        PlayVideoWithPlayer(filepath, id);
                     };
 
                     contextMenu.Items.Add(menuItem);

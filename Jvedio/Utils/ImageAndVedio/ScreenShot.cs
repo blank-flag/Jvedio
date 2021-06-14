@@ -16,10 +16,11 @@ using static Jvedio.GlobalVariable;
 
 namespace Jvedio
 {
+
+    //TODO 线程池
     public class ScreenShot
     {
         public event EventHandler SingleScreenShotCompleted;
-
         private Semaphore SemaphoreScreenShot;
         private int ScreenShotCurrent = 0;
         private object ScreenShotLockObject = 0;
@@ -45,7 +46,8 @@ namespace Jvedio
 
         public async Task<bool> BeginGenGif(object o)
         {
-            return await Task.Run(async () => {
+            return await Task.Run(async () =>
+            {
                 object[] list = o as object[];
                 string cutoffTime = list[0] as string;
                 string filePath = list[1] as string;
@@ -82,8 +84,9 @@ namespace Jvedio
             bool result = true;
             string message = "";
             List<string> outputPath = new List<string>();
-            await Task.Run(() => {
-                
+            await Task.Run(() =>
+            {
+
                 if (!File.Exists(Properties.Settings.Default.FFMPEG_Path)) { result = false; message = Jvedio.Language.Resources.Message_SetFFmpeg; return; }
 
                 int num = Properties.Settings.Default.ScreenShot_ThreadNum;// n 个线程截图
@@ -159,9 +162,9 @@ namespace Jvedio
 
     public class ScreenShotEventArgs : EventArgs
     {
-        public string FFmpegCommand="";
-        public string FilePath="";
-        public string Error="";
+        public string FFmpegCommand = "";
+        public string FilePath = "";
+        public string Error = "";
 
         public ScreenShotEventArgs(string _FFmpegCommand, string filepath, string error = "")
         {

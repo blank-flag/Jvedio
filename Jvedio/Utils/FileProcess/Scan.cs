@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Security.Permissions;
 using Jvedio.Utils;
+using System.Text;
 
 namespace Jvedio
 {
@@ -16,7 +17,7 @@ namespace Jvedio
     {
         public static double MinFileSize = Properties.Settings.Default.ScanMinFileSize * 1024 * 1024;//最小文件大小
         public static List<string> FilePattern = new List<string>();//文件格式
-        public static List<string> ImagePattern = new List<string>() { ".jpg",".png",".jpeg",".bmp" };
+        public static List<string> ImagePattern = new List<string>() { ".jpg", ".png", ".jpeg", ".bmp" };
 
         public static void InitSearchPattern()
         {
@@ -30,26 +31,27 @@ namespace Jvedio
 
         public static double InsertWithNfo(List<string> filepaths, CancellationToken ct, Action<string> messageCallBack = null, bool IsEurope = false)
         {
-            List<string> nfopaths = new List<string>();
-            List<string> vediopaths = new List<string>();
+            if (filepaths == null || filepaths.Count == 0) return 0;
+            List<string> nfoPaths = new List<string>();
+            List<string> videoPaths = new List<string>();
 
             foreach (var item in filepaths)
             {
                 if (item.ToLower().EndsWith(".nfo"))
-                    nfopaths.Add(item);
+                    nfoPaths.Add(item);
                 else
-                    vediopaths.Add(item);
+                    videoPaths.Add(item);
             }
 
             //先导入 nfo 再导入视频，避免路径覆盖
-            if (nfopaths.Count > 0 && Properties.Settings.Default.ScanNfo)
+            if (Properties.Settings.Default.ScanNfo && nfoPaths.Count > 0)
             {
                 Logger.LogScanInfo(Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----");
-                Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.ScanNFO} => {nfopaths.Count}  " + Environment.NewLine);
+                Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.ScanNFO} => {nfoPaths.Count}  " + Environment.NewLine);
 
                 double total = 0;
                 //导入 nfo 文件
-                nfopaths.ForEach(item =>
+                nfoPaths.ForEach(item =>
                 {
                     if (File.Exists(item))
                     {
@@ -74,14 +76,15 @@ namespace Jvedio
 
 
             //导入视频
-            if (vediopaths.Count > 0)
+            if (videoPaths.Count > 0)
             {
                 try
                 {
-                    double _num = Scan.DistinctMovieAndInsert(vediopaths, ct, IsEurope);
+                    double _num = DistinctMovieAndInsert(videoPaths, ct, IsEurope);
                     messageCallBack?.Invoke($"{Jvedio.Language.Resources.ImportVideioNumber}：{_num}，详情请看日志");
                     return _num;
-                }catch(OperationCanceledException ex)
+                }
+                catch (OperationCanceledException ex)
                 {
                     Logger.LogF(ex);
                     messageCallBack?.Invoke($"{Jvedio.Language.Resources.Cancel}");
@@ -95,8 +98,8 @@ namespace Jvedio
 
         public static bool IsProperMovie(string FilePath)
         {
-            return File.Exists(FilePath) && 
-                FilePattern.Contains(System.IO.Path.GetExtension(FilePath).ToLower()) && 
+            return File.Exists(FilePath) &&
+                FilePattern.Contains(System.IO.Path.GetExtension(FilePath).ToLower()) &&
                 new System.IO.FileInfo(FilePath).Length >= MinFileSize;
         }
 
@@ -129,7 +132,7 @@ namespace Jvedio
             {
                 try
                 {
-                    if (Directory.Exists(item)) stringCollection.Add(item); 
+                    if (Directory.Exists(item)) stringCollection.Add(item);
                 }
                 catch (Exception e)
                 {
@@ -145,26 +148,36 @@ namespace Jvedio
         //根据 视频后缀文件大小筛选
         public static List<string> FirstFilter(List<string> FilePathList, string ID = "")
         {
-            if (ID == "")
+            if (FilePathList == null || FilePathList.Count == 0) return new List<string>();
+            try
             {
-                return FilePathList
-                    .Where(s => FilePattern.Contains(Path.GetExtension(s).ToLower()))
-                    .Where(s => !File.Exists(s) || new FileInfo(s).Length >= MinFileSize).
-                    OrderBy(s => s).ToList();
+                if (ID == "")
+                {
+                    return FilePathList
+                        .Where(s => FilePattern.Contains(Path.GetExtension(s).ToLower()))
+                        .Where(s => !File.Exists(s) || new FileInfo(s).Length >= MinFileSize).
+                        OrderBy(s => s).ToList();
+                }
+                else
+                {
+                    return FilePathList
+                        .Where(s => FilePattern.Contains(Path.GetExtension(s).ToLower()))
+                        .Where(s => !File.Exists(s) || new FileInfo(s).Length >= MinFileSize)
+                        .Where(s => { try { return Identify.GetFanhao(new FileInfo(s).Name).ToUpper() == ID.ToUpper(); } catch { Logger.LogScanInfo($"错误路径：{s}"); return false; } })
+                        .OrderBy(s => s).ToList();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return FilePathList
-                    .Where(s => FilePattern.Contains(Path.GetExtension(s).ToLower()))
-                    .Where(s => !File.Exists(s) || new FileInfo(s).Length >= MinFileSize)
-                    .Where(s => { try { return Identify.GetFanhao(new FileInfo(s).Name).ToUpper() == ID.ToUpper(); } catch { Logger.LogScanInfo($"错误路径：{s}"); return false; } })
-                    .OrderBy(s => s).ToList();
+                Logger.LogF(ex);
             }
+            return new List<string>();
         }
 
         public static List<string> ScanTopPaths(StringCollection stringCollection)
         {
             List<string> result = new List<string>();
+            if (stringCollection == null || stringCollection.Count == 0) return result;
             foreach (var item in stringCollection)
             {
                 try
@@ -181,7 +194,13 @@ namespace Jvedio
             List<string> result = new List<string>();
             string SubSectionFeature = Resource_String.SubSectionFeature;
             string SplitFeature = SubSectionFeature.Replace("，", ",");
-            if (SplitFeature.Split(',').Count() > 0) { foreach (var item in SplitFeature.Split(',')) { if (!result.Contains(item)) { result.Add(item); } } }
+            if (SplitFeature.Split(',').Count() > 0)
+            {
+                foreach (var item in SplitFeature.Split(','))
+                {
+                    if (!result.Contains(item)) result.Add(item);
+                }
+            }
             return result;
         }
 
@@ -196,10 +215,9 @@ namespace Jvedio
         {
             bool result = true;
             List<string> notSubSection = new List<string>();
+            if (FilePathList == null || FilePathList.Count == 0) return (false, new List<string>(), new List<string>());
             string FatherPath = new FileInfo(FilePathList[0]).Directory.FullName;
-
             bool IsAllFileSameFP = FilePathList.All(arg => new FileInfo(arg).Directory.FullName == FatherPath);
-
             if (!IsAllFileSameFP)
             {
                 //并不是所有父目录都相同，提取出父目录最多的文件
@@ -241,7 +259,10 @@ namespace Jvedio
                 foreach (var re in Regex.Matches(item, regexFeature)) { MatchesName += re.ToString(); }
             }
 
-            for (int i = 1; i <= FilePathList.Count; i++) { result &= MatchesName.IndexOf(i.ToString()) >= 0; }
+            for (int i = 1; i <= FilePathList.Count; i++)
+            {
+                result &= MatchesName.IndexOf(i.ToString()) >= 0;
+            }
 
 
             if (!result)
@@ -263,11 +284,7 @@ namespace Jvedio
                 string characters = "abcdefghijklmn";
                 for (int i = 0; i < Math.Min(FilePathList.Count, characters.Length); i++) { result &= MatchesName.IndexOf(characters[i]) >= 0; }
             }
-
-
-
             return (result, FilePathList, notSubSection);
-
         }
 
 
@@ -278,31 +295,35 @@ namespace Jvedio
         public static List<string> ScanPaths(StringCollection stringCollection, CancellationToken cancellationToken)
         {
             List<string> result = new List<string>();
-            foreach (var item in stringCollection) {
+            if (stringCollection == null || stringCollection.Count == 0) return result;
+            foreach (var item in stringCollection)
+            {
                 try
                 {
                     result.AddRange(GetAllFilesFromFolder(item, cancellationToken));
-                }catch(OperationCanceledException ex)
+                }
+                catch (OperationCanceledException ex)
                 {
                     Console.WriteLine(ex.Message);
                     return result;
                 }
             }
-
-            var result2 = result
-                .Where(s => FilePattern.Contains(System.IO.Path.GetExtension(s).ToLower()))
-                .Where(s => !File.Exists(s) || new System.IO.FileInfo(s).Length >= MinFileSize).OrderBy(s => s).ToList();
-            return result2;
+            return result
+                    .Where(s => FilePattern.Contains(System.IO.Path.GetExtension(s).ToLower()))
+                    .Where(s => !File.Exists(s) || new System.IO.FileInfo(s).Length >= MinFileSize).OrderBy(s => s).ToList();
         }
 
         public static List<string> ScanNFO(StringCollection stringCollection, CancellationToken cancellationToken, Action<string> callBack)
         {
             List<string> result = new List<string>();
-            foreach (var item in stringCollection) {
+            if (stringCollection == null || stringCollection.Count == 0) return result;
+            foreach (var item in stringCollection)
+            {
                 try
                 {
                     result.AddRange(GetAllFilesFromFolder(item, cancellationToken, "*.*", callBack));
-                }catch(OperationCanceledException ex)
+                }
+                catch (OperationCanceledException ex)
                 {
                     Console.WriteLine(ex.Message);
                     return result.Where(s => Path.GetExtension(s).ToLower().IndexOf("nfo") > 0).ToList();
@@ -362,12 +383,12 @@ namespace Jvedio
             Logger.LogScanInfo(Environment.NewLine + "-----【" + DateTime.Now.ToString() + "】-----");
             Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.ScanVideo} => {MoviePaths.Count} " + Environment.NewLine);
 
-            List<string> result1 = new List<string>();
-            string log1 = "";
+            List<string> properIdList = new List<string>();
+            StringBuilder logStr = new StringBuilder();
             string id = "";
             VedioType vt = 0;
-            double totalinsertnum = 0;//总的导入数目
-            double unidentifynum = 0;//无法识别的数目
+            double insertCount = 0;//总的导入数目
+            double unidentifyCount = 0;//无法识别的数目
 
             //检查未识别出番号的视频
             foreach (var item in MoviePaths)
@@ -380,20 +401,20 @@ namespace Jvedio
                     else vt = Identify.GetVideoType(id);
 
 
-                    if (vt != 0) result1.Add(item);
+                    if (vt != 0) properIdList.Add(item);
                     else
                     {
-                        log1 += "   " + item + Environment.NewLine;
-                        unidentifynum++;
+                        logStr.Append("   " + item + Environment.NewLine);
+                        unidentifyCount++;
                     }
                 }
             }
-            Logger.LogScanInfo(Environment.NewLine + $"【{Jvedio.Language.Resources.NotRecognizeNumber} ：{unidentifynum}】" + Environment.NewLine + log1);
+            Logger.LogScanInfo(Environment.NewLine + $"【{Jvedio.Language.Resources.NotRecognizeNumber} ：{unidentifyCount}】" + Environment.NewLine + logStr.ToString());
 
             //检查 重复|分段 视频
             Dictionary<string, List<string>> repeatlist = new Dictionary<string, List<string>>();
-            string log2 = "";
-            foreach (var item in result1)
+            StringBuilder logSubSection = new StringBuilder();
+            foreach (var item in properIdList)
             {
                 if (File.Exists(item))
                 {
@@ -425,32 +446,33 @@ namespace Jvedio
                         if (filepathlist.Count < kvp.Value.Count)
                         {
                             //其中几个不是分段视频
-                            log2 += $"   {Jvedio.Language.Resources.ID} ：{kvp.Key}" + Environment.NewLine;
+                            logSubSection.Append($"   {Jvedio.Language.Resources.ID} ：{kvp.Key}" + Environment.NewLine);
                             removelist.AddRange(notsubsection);
-                            log2 += $"      {Jvedio.Language.Resources.ImportSubSection}： {filepathlist.Count} ，：{string.Join(";", filepathlist)}" + Environment.NewLine;
+                            logSubSection.Append($"      {Jvedio.Language.Resources.ImportSubSection}： {filepathlist.Count} ，：{string.Join(";", filepathlist)}" + Environment.NewLine);
                             notsubsection.ForEach(arg =>
                             {
-                                log2 += $"      {Jvedio.Language.Resources.NotImport} ：{arg}" + Environment.NewLine;
+                                logSubSection.Append($"      {Jvedio.Language.Resources.NotImport} ：{arg}" + Environment.NewLine);
                             });
                         }
                     }
                     else
                     {
-                        log2 += $"   {Jvedio.Language.Resources.ID}：{kvp.Key}" + Environment.NewLine;
+                        //TODO
+                        logSubSection.Append($"   {Jvedio.Language.Resources.ID}：{kvp.Key}" + Environment.NewLine);
                         (string maxfilepath, List<string> Excludelsist) = ExcludeMaximumSize(kvp.Value);
                         removelist.AddRange(Excludelsist);
-                        log2 += $"      {Jvedio.Language.Resources.ImportFile} ：{maxfilepath}，{Jvedio.Language.Resources.FileSize} ：{new FileInfo(maxfilepath).Length}" + Environment.NewLine;
+                        logSubSection.Append($"      {Jvedio.Language.Resources.ImportFile} ：{maxfilepath}，{Jvedio.Language.Resources.FileSize} ：{new FileInfo(maxfilepath).Length}" + Environment.NewLine);
                         Excludelsist.ForEach(arg =>
                         {
-                            log2 += $"      {Jvedio.Language.Resources.NotImport} ：{arg}，{Jvedio.Language.Resources.FileSize} ：{new FileInfo(arg).Length}" + Environment.NewLine;
+                            logSubSection.Append($"      {Jvedio.Language.Resources.NotImport} ：{arg}，{Jvedio.Language.Resources.FileSize} ：{new FileInfo(arg).Length}" + Environment.NewLine);
                         });
                     }
 
                 }
             }
-            Logger.LogScanInfo(Environment.NewLine + $"【 {Jvedio.Language.Resources.RepeatVideo}：{removelist.Count + subsectionlist.Count}】" + Environment.NewLine + log2);
-           
-            List<string> insertList = result1.Except(removelist).ToList();//需要导入的视频
+            Logger.LogScanInfo(Environment.NewLine + $"【 {Jvedio.Language.Resources.RepeatVideo}：{removelist.Count + subsectionlist.Count}】" + Environment.NewLine + logSubSection.ToString());
+
+            List<string> insertList = properIdList.Except(removelist).ToList();//需要导入的视频
 
             //导入分段视频
             foreach (var item in subsectionlist)
@@ -461,7 +483,7 @@ namespace Jvedio
                 FileInfo fileinfo = new FileInfo(item[0]);//获得第一个视频的文件信息
                 id = IsEurope ? Identify.GetEuFanhao(fileinfo.Name) : Identify.GetFanhao(fileinfo.Name);
                 if (IsEurope) { if (string.IsNullOrEmpty(id)) continue; else vt = VedioType.欧美; } else { vt = Identify.GetVideoType(id); }
-                if (string.IsNullOrEmpty(id) | vt == 0) { continue; }
+                if (string.IsNullOrEmpty(id) || vt == 0) continue;
 
                 //文件大小视为所有文件之和
                 double filesize = 0;
@@ -474,6 +496,7 @@ namespace Jvedio
                 }
 
                 //获取创建日期
+                //TODO 国际化
                 string createDate = "";
                 try { createDate = fileinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"); }
                 catch { }
@@ -491,14 +514,14 @@ namespace Jvedio
                 };
 
                 DataBase.InsertScanMovie(movie);
-                totalinsertnum += 1;
+                insertCount += 1;
             }
 
             //导入剩余的所有视频
             foreach (var item in insertList)
             {
                 ct.ThrowIfCancellationRequested();
-                if (!File.Exists(item)) { continue; }
+                if (!File.Exists(item)) continue;
                 FileInfo fileinfo = new FileInfo(item);
 
                 string createDate = "";
@@ -507,7 +530,13 @@ namespace Jvedio
                 if (createDate == "") createDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
                 id = IsEurope ? Identify.GetEuFanhao(fileinfo.Name) : Identify.GetFanhao(fileinfo.Name);
-                if (IsEurope) { if (string.IsNullOrEmpty(id)) continue; else vt = VedioType.欧美; } else { vt = Identify.GetVideoType(id); }
+                if (string.IsNullOrEmpty(id)) continue;
+
+                if (IsEurope) vt = VedioType.欧美;
+                else vt = Identify.GetVideoType(id);
+
+                if (vt == 0) continue;
+
                 Movie movie = new Movie()
                 {
                     filepath = item,
@@ -518,12 +547,12 @@ namespace Jvedio
                     scandate = createDate
                 };
                 DataBase.InsertScanMovie(movie);
-                totalinsertnum += 1;
+                insertCount += 1;
             }
 
-            Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.TotalImport} => {totalinsertnum}，{Jvedio.Language.Resources.ImportAttention}" + Environment.NewLine);
+            Logger.LogScanInfo(Environment.NewLine + $"{Jvedio.Language.Resources.TotalImport} => {insertCount}，{Jvedio.Language.Resources.ImportAttention}" + Environment.NewLine);
 
-
+            //TODO 从主数据库中复制信息
             //从 主数据库中 复制信息
             //if (Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath).ToLower() != "info")
             //{
@@ -535,7 +564,7 @@ namespace Jvedio
             //    }
             //    catch { }
             //}
-            return totalinsertnum;
+            return insertCount;
         }
 
         public static (string, List<string>) ExcludeMaximumSize(List<string> pathlist)

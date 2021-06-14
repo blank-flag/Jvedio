@@ -207,6 +207,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\CrawlerLoader.cs" />
+    <Compile Include="Core\PropertiesLoader.cs" />
+    <Compile Include="Core\ThemeLoader.cs" />
     <Compile Include="DialogWindows\Dialog_LoadPage.xaml.cs">
       <DependentUpon>Dialog_LoadPage.xaml</DependentUpon>
     </Compile>

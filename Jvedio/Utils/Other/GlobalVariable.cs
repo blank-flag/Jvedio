@@ -37,7 +37,7 @@ namespace Jvedio
 
 
 
-        public static int MaxProcessWaitingSecond = 5; //ffmpeg 超时等待时间
+
         public static Stopwatch stopwatch = new Stopwatch();//计时
 
         public static string InfoDataBasePath = AppDomain.CurrentDomain.BaseDirectory + "Info.sqlite";
@@ -55,7 +55,7 @@ namespace Jvedio
         public static List<string> Uncensored = new List<string>();
 
 
-        public static double MinHDVFileSize = 2;//多少 GB 视为高清
+
 
         // jav321 转换规则
         public static Dictionary<string, string> Jav321IDDict = new Dictionary<string, string>();

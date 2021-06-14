@@ -20,7 +20,6 @@ namespace Jvedio
     public class ActorSearch
     {
         public string Name { get; set; }
-
         public int ID { get; set; }
         public string Link { get; set; }
         public string Img { get; set; }
@@ -42,13 +41,9 @@ namespace Jvedio
 
     public abstract class ActorCrawler
     {
-
-
-        protected string Url ;//网址
+        protected string Url;//网址
         protected CrawlerHeader headers;
         protected HttpResult httpResult;
-        
-
 
         public string Name { get; set; }//必须给出演员名字
 
@@ -87,30 +82,32 @@ namespace Jvedio
         public override async Task<HttpResult> Crawl()
         {
             if (Url.IsProperUrl()) InitHeaders();
-            httpResult = await new MyNet().Http(Url,headers);
+            httpResult = await new MyNet().Http(Url, headers);
             if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != null)
             {
-                
+
                 httpResult.Success = true;
                 ParseCookies(httpResult.Headers.SetCookie);
             }
             return httpResult;
         }
 
+
+        //TODO 并发问题
         protected override void ParseCookies(string SetCookie)
         {
-            if (SetCookie == null) return;
+            if (string.IsNullOrEmpty(SetCookie)) return;
             List<string> Cookies = new List<string>();
-            var values = SetCookie.Split(new char[] { ',',';'}).ToList();
+            var values = SetCookie.Split(new char[] { ',', ';' }).ToList();
             foreach (var item in values)
             {
                 if (item.IndexOf('=') < 0) continue;
                 string key = item.Split('=')[0];
-                string value= item.Split('=')[1];
+                string value = item.Split('=')[1];
                 if (key == "__cfduid" || key == "PHPSESSID" || key == "existmag") Cookies.Add(key + "=" + value);
             }
             string cookie = string.Join(";", Cookies);
-            if(VedioType==VedioType.欧美)
+            if (VedioType == VedioType.欧美)
                 JvedioServers.BusEurope.Cookie = cookie;
             else
                 JvedioServers.Bus.Cookie = cookie;
@@ -120,7 +117,10 @@ namespace Jvedio
 
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() { Cookies=VedioType==VedioType.欧美?JvedioServers.BusEurope.Cookie: JvedioServers.Bus.Cookie };
+            headers = new CrawlerHeader()
+            {
+                Cookies = VedioType == VedioType.欧美 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie
+            };
         }
 
 
@@ -136,15 +136,16 @@ namespace Jvedio
 
         public FC2ActorCrawler(string Id) : base(Id)
         {
-              
+
         }
 
 
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() {
+            headers = new CrawlerHeader()
+            {
                 Cookies = JvedioServers.FC2.Cookie
-                };
+            };
         }
 
         public override async Task<HttpResult> Crawl()
@@ -182,16 +183,17 @@ namespace Jvedio
         protected string MovieCode;
         public DBActorCrawler(string Id) : base(Id)
         {
-             
+
         }
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() {
+            headers = new CrawlerHeader()
+            {
                 Cookies = JvedioServers.DB.Cookie
             };
         }
 
-        public  async Task<string> GetMovieCode(Action<string> callback=null)
+        public async Task<string> GetMovieCode(Action<string> callback = null)
         {
             return null;
         }
@@ -228,10 +230,10 @@ namespace Jvedio
         protected string MovieCode;
         public LibraryActorCrawler(string Id) : base(Id)
         {
- 
+
         }
 
-        protected  async Task<string> GetMovieCode()
+        protected async Task<string> GetMovieCode()
         {
             return null;
         }
@@ -285,10 +287,10 @@ namespace Jvedio
         protected string MovieCode = "";
         public FANZAActorCrawler(string Id) : base(Id)
         {
- 
+
         }
 
-        protected  async Task<string> GetMovieCode()
+        protected async Task<string> GetMovieCode()
         {
             return null;
         }
@@ -330,7 +332,7 @@ namespace Jvedio
         protected string MovieCode;
         public MOOActorCrawler(string Id) : base(Id)
         {
-             
+
         }
         protected override void InitHeaders()
         {
@@ -349,7 +351,7 @@ namespace Jvedio
             //未找到
 
             //搜索太频繁
-            
+
             return "";
         }
 
@@ -369,7 +371,7 @@ namespace Jvedio
 
         protected override void ParseCookies(string SetCookie)
         {
-            return ;
+            return;
         }
 
 
@@ -389,19 +391,20 @@ namespace Jvedio
             Url = JvedioServers.Jav321.Url + $"search";
         }
 
-        protected  void InitHeaders(string postdata)
+        protected void InitHeaders(string postdata)
         {
             //sn=pppd-093
             if (!Url.IsProperUrl()) return;
             Uri uri = new Uri(Url);
-            headers = new CrawlerHeader() {
-                
-                ContentLength=postdata.Length+3,
-                Origin= uri.Scheme + "://"+ uri.Host,
-                ContentType= "application/x-www-form-urlencoded",
-                Referer= uri.Scheme + "://" + uri.Host,
-                Method="POST",
-                Cookies=JvedioServers.Jav321.Cookie
+            headers = new CrawlerHeader()
+            {
+
+                ContentLength = postdata.Length + 3,
+                Origin = uri.Scheme + "://" + uri.Host,
+                ContentType = "application/x-www-form-urlencoded",
+                Referer = uri.Scheme + "://" + uri.Host,
+                Method = "POST",
+                Cookies = JvedioServers.Jav321.Cookie
             };
         }
 
@@ -420,7 +423,7 @@ namespace Jvedio
             return null;
         }
 
-        
+
 
 
         protected override Dictionary<string, string> GetInfo()

@@ -745,7 +745,7 @@
     <value>服务器源</value>
   </data>
   <data name="Attention_UrlTest" xml:space="preserve">
-    <value>注：新添加的网址测试通过才能保存，服务器名称不为空才能修改【启用】</value>
+    <value>注：新添加的网址测试通过才能保存，服务器名称不为空才能修改【启用】，除了指定服务器外，其他服务器不会保存</value>
   </data>
   <data name="Enable" xml:space="preserve">
     <value>启用</value>
@@ -1724,5 +1724,8 @@
   </data>
   <data name="MainIsDownloading" xml:space="preserve">
     <value>主界面已经在同步！</value>
+  </data>
+  <data name="ActressDownloadAttention" xml:space="preserve">
+    <value>注意：只有 Bus 上存在才能同步</value>
   </data>
 </root>

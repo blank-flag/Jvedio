@@ -745,7 +745,7 @@
     <value>サーバーソース</value>
   </data>
   <data name="Attention_UrlTest" xml:space="preserve">
-    <value>注：新しく追加されたURLは、テストに合格した場合にのみ保存でき、サーバー名は、サーバー名が空でない場合にのみ変更できます</value>
+    <value>注:新しく追加されたurlはテストに合格しないと保存できません。サーバー名が空でないと[有効化]を変更できません。指定されたサーバー以外は保存されません</value>
   </data>
   <data name="Enable" xml:space="preserve">
     <value>有効にする</value>
@@ -1724,5 +1724,8 @@
   </data>
   <data name="MainIsDownloading" xml:space="preserve">
     <value>メイン画面はすでに同期しています!</value>
+  </data>
+  <data name="ActressDownloadAttention" xml:space="preserve">
+    <value>注意:bus上に存在している場合のみ同期できます</value>
   </data>
 </root>

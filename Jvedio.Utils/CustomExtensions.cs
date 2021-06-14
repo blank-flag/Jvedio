@@ -54,9 +54,9 @@ namespace Jvedio.Utils
 
         public static bool IsLetter(this char c)
         {
-            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) 
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
                 return true;
-            else 
+            else
                 return false;
         }
 
@@ -213,6 +213,14 @@ namespace Jvedio.Utils
         public static bool IsProperUrl(this string source) => Uri.TryCreate(source, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
 
+        public static string ToProperFileName(this string filename)
+        {
+            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+            {
+                filename = filename.Replace(c, '_');
+            }
+            return filename;
+        }
 
 
 

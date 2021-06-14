@@ -134,46 +134,46 @@ namespace Jvedio
         /// <summary>
         /// 保存信息到 NFO 文件
         /// </summary>
-        /// <param name="vedio"></param>
+        /// <param name="video"></param>
         /// <param name="NfoPath"></param>
-        public static void SaveToNFO(DetailMovie vedio, string NfoPath)
+        public static void SaveToNFO(DetailMovie video, string NfoPath)
         {
             var nfo = new NFO(NfoPath, "movie");
-            nfo.SetNodeText("source", vedio.sourceurl);
-            nfo.SetNodeText("title", vedio.title);
-            nfo.SetNodeText("director", vedio.director);
-            nfo.SetNodeText("rating", vedio.rating.ToString());
-            nfo.SetNodeText("year", vedio.year.ToString());
-            nfo.SetNodeText("countrycode", vedio.countrycode.ToString());
-            nfo.SetNodeText("release", vedio.releasedate);
-            nfo.SetNodeText("runtime", vedio.runtime.ToString());
-            nfo.SetNodeText("country", vedio.country);
-            nfo.SetNodeText("studio", vedio.studio);
-            nfo.SetNodeText("id", vedio.id);
-            nfo.SetNodeText("num", vedio.id);
+            nfo.SetNodeText("source", video.sourceurl);
+            nfo.SetNodeText("title", video.title);
+            nfo.SetNodeText("director", video.director);
+            nfo.SetNodeText("rating", video.rating.ToString());
+            nfo.SetNodeText("year", video.year.ToString());
+            nfo.SetNodeText("countrycode", video.countrycode.ToString());
+            nfo.SetNodeText("release", video.releasedate);
+            nfo.SetNodeText("runtime", video.runtime.ToString());
+            nfo.SetNodeText("country", video.country);
+            nfo.SetNodeText("studio", video.studio);
+            nfo.SetNodeText("id", video.id);
+            nfo.SetNodeText("num", video.id);
 
             // 类别
-            foreach (var item in vedio.genre?.Split(' '))
+            foreach (var item in video.genre?.Split(' '))
             {
                 if (!string.IsNullOrEmpty(item)) nfo.AppendNewNode("genre", item);
             }
             // 系列
-            foreach (var item in vedio.tag?.Split(' '))
+            foreach (var item in video.tag?.Split(' '))
             {
                 if (!string.IsNullOrEmpty(item)) nfo.AppendNewNode("tag", item);
             }
 
             // Fanart
             nfo.AppendNewNode("fanart");
-            foreach (var item in vedio.extraimageurl?.Split(';'))
+            foreach (var item in video.extraimageurl?.Split(';'))
             {
                 if (!string.IsNullOrEmpty(item)) nfo.AppendNodeToNode("fanart", "thumb", item, "preview", item);
             }
 
             // 演员
-            if (vedio.vediotype == (int)VedioType.欧美)
+            if (video.vediotype == (int)VedioType.欧美)
             {
-                foreach (var item in vedio.actor?.Split('/'))
+                foreach (var item in video.actor?.Split('/'))
                 {
                     if (!string.IsNullOrEmpty(item))
                     {
@@ -185,7 +185,7 @@ namespace Jvedio
             }
             else
             {
-                foreach (var item in vedio.actor?.Split(actorSplitDict[vedio.vediotype]))
+                foreach (var item in video.actor?.Split(actorSplitDict[video.vediotype]))
                 {
                     if (!string.IsNullOrEmpty(item))
                     {

@@ -745,7 +745,7 @@
     <value>Url List</value>
   </data>
   <data name="Attention_UrlTest" xml:space="preserve">
-    <value>Note: The newly added URL can only be saved after passing the test, and the server name can be modified only if the server name is not empty [Enable]</value>
+    <value>Note: The newly added URL can only be saved if it passes the test. The server name can only be changed [Enable] if it is not empty. In addition to the specified server, other servers will not save it</value>
   </data>
   <data name="Enable" xml:space="preserve">
     <value>Enable</value>
@@ -1724,5 +1724,8 @@
   </data>
   <data name="MainIsDownloading" xml:space="preserve">
     <value>The main Windowis already syncing!</value>
+  </data>
+  <data name="ActressDownloadAttention" xml:space="preserve">
+    <value>Note: Synchronization is possible only if it exists on the BUS</value>
   </data>
 </root>

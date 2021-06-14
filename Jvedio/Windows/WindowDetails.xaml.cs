@@ -507,7 +507,7 @@ namespace Jvedio
             {
                 string filepath = vieModel.DetailMovie.filepath;
                 Main main = GetWindowByName("Main") as Main;
-                main.PlayVedioWithPlayer(filepath, vieModel.DetailMovie.id, GrowlToken);
+                main.PlayVideoWithPlayer(filepath, vieModel.DetailMovie.id, GrowlToken);
             }
         }
 
@@ -1200,7 +1200,7 @@ namespace Jvedio
             TextBlock textBlock = stackPanel.Children.OfType<TextBlock>().Last();
             string filepath = textBlock.Text;
             Main main = GetWindowByName("Main") as Main;
-            main.PlayVedioWithPlayer(filepath, vieModel.DetailMovie.id, GrowlToken);
+            main.PlayVideoWithPlayer(filepath, vieModel.DetailMovie.id, GrowlToken);
 
 
         }

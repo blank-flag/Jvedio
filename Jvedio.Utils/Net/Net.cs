@@ -61,17 +61,17 @@ namespace Jvedio.Utils.Net
     }
 
 
-    public  class Net:ILog
+    public class Net : ILog
     {
-        public  int TCPTIMEOUT = 30;   // TCP 超时
-        public  int HTTPTIMEOUT = 30; // HTTP 超时
-        public  int ATTEMPTNUM = 2; // 最大尝试次数
-        public  int REQUESTTIMEOUT = 30000;//网站 HTML 获取超时
-        public  int FILE_REQUESTTIMEOUT = 30000;//图片下载超时
-        public  int READWRITETIMEOUT = 30000;
+        public int TCPTIMEOUT = 30;   // TCP 超时
+        public int HTTPTIMEOUT = 30; // HTTP 超时
+        public int ATTEMPTNUM = 2; // 最大尝试次数
+        public int REQUESTTIMEOUT = 30000;//网站 HTML 获取超时
+        public int FILE_REQUESTTIMEOUT = 30000;//图片下载超时
+        public int READWRITETIMEOUT = 30000;
 
 
-        public  Net(int[] timeouts)
+        public Net(int[] timeouts)
         {
             TCPTIMEOUT = timeouts[0];
             HTTPTIMEOUT = timeouts[1];
@@ -104,7 +104,7 @@ namespace Jvedio.Utils.Net
         /// <param name="allowRedirect"></param>
         /// <param name="poststring"></param>
         /// <returns></returns>
-        public  async Task<HttpResult> Http(string Url, CrawlerHeader headers = null, HttpMode Mode = HttpMode.Normal, WebProxy Proxy = null, bool allowRedirect = true, string postString = "")
+        public async Task<HttpResult> Http(string Url, CrawlerHeader headers = null, HttpMode Mode = HttpMode.Normal, WebProxy Proxy = null, bool allowRedirect = true, string postString = "")
         {
             if (!Url.IsProperUrl()) return null;
             if (headers == null) headers = new CrawlerHeader();
@@ -131,7 +131,7 @@ namespace Jvedio.Utils.Net
                         Uri uri = new Uri(Url);
                         Request.Host = headers.Host == "" ? uri.Host : headers.Host;
                         Request.Accept = headers.Accept;
-                        Request.Timeout = HTTPTIMEOUT*1000;
+                        Request.Timeout = HTTPTIMEOUT * 1000;
                         Request.Method = headers.Method;
                         Request.KeepAlive = true;
                         Request.AllowAutoRedirect = allowRedirect;
@@ -164,7 +164,7 @@ namespace Jvedio.Utils.Net
                             }
                             Response = (HttpWebResponse)Request.GetResponse();
                             httpResult = GetHttpResult(Response, Mode);
-                            Console.WriteLine ($" {Jvedio.Language.Resources.Url}：{Url} => {httpResult.StatusCode}");
+                            Console.WriteLine($" {Jvedio.Language.Resources.Url}：{Url} => {httpResult.StatusCode}");
                         }
                         catch (WebException e)
                         {
@@ -174,7 +174,7 @@ namespace Jvedio.Utils.Net
                             {
                                 Error = e.Message,
                                 Success = false,
-                                SourceCode=""
+                                SourceCode = ""
                             };
 
                             if (e.Status == WebExceptionStatus.Timeout)
@@ -199,10 +199,15 @@ namespace Jvedio.Utils.Net
             {
                 //任务超时了
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.Message);
             }
             return httpResult;
         }
+
+        public async Task<HttpResult> Http(string Url)
+        {
+            return await Http(Url, null);
+        }
+
 
         /// <summary>
         /// 将 HttpWebResponse 转为 HttpResult
@@ -210,54 +215,76 @@ namespace Jvedio.Utils.Net
         /// <param name="response"></param>
         /// <param name="mode"></param>
         /// <returns></returns>
-        public  HttpResult GetHttpResult(HttpWebResponse response, HttpMode mode)
+        public HttpResult GetHttpResult(HttpWebResponse response, HttpMode mode)
         {
             HttpResult httpResult = new HttpResult();
-            httpResult.StatusCode = response.StatusCode;
-            WebHeaderCollection webHeaderCollection = response.Headers;
-
-            //获得响应头
-            ResponseHeaders responseHeaders = new ResponseHeaders()
+            WebHeaderCollection webHeaderCollection = null;
+            ResponseHeaders responseHeaders = null;
+            try
             {
-                Location = webHeaderCollection.Get("Location"),
-                Date = webHeaderCollection.Get("Date"),
-                ContentType = webHeaderCollection.Get("Content-Type"),
-                Connection = webHeaderCollection.Get("Connection"),
-                CacheControl = webHeaderCollection.Get("Cache-Control"),
-                SetCookie = webHeaderCollection.Get("Set-Cookie"),
-            };
-            double.TryParse(webHeaderCollection.Get("Content-Length"), out responseHeaders.ContentLength);
-
-            httpResult.Headers = responseHeaders;
+                httpResult.StatusCode = response.StatusCode;
+                webHeaderCollection = response.Headers;
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Log(ex.Message);
+            }
+            if (webHeaderCollection != null)
+            {
+                //获得响应头
+                responseHeaders = new ResponseHeaders()
+                {
+                    Location = webHeaderCollection.Get("Location"),
+                    Date = webHeaderCollection.Get("Date"),
+                    ContentType = webHeaderCollection.Get("Content-Type"),
+                    Connection = webHeaderCollection.Get("Connection"),
+                    CacheControl = webHeaderCollection.Get("Cache-Control"),
+                    SetCookie = webHeaderCollection.Get("Set-Cookie"),
+                };
+                double.TryParse(webHeaderCollection.Get("Content-Length"), out responseHeaders.ContentLength);
+                httpResult.Headers = responseHeaders;
+            }
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                if (mode == HttpMode.Normal)
+                if (mode != HttpMode.Stream)
                 {
-                    using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                    try
                     {
-                        httpResult.SourceCode = sr.ReadToEnd();
+                        using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                        {
+                            httpResult.SourceCode = sr.ReadToEnd();
+                        }
                     }
-                    if (responseHeaders.ContentLength == 0) responseHeaders.ContentLength = httpResult.SourceCode.Length;
+                    catch (Exception ex)
+                    {
+                        Log(ex);
+                    }
+                    if (responseHeaders?.ContentLength == 0) responseHeaders.ContentLength = httpResult.SourceCode.Length;
                 }
-                else if (mode == HttpMode.Stream)
+                else
                 {
-                    using (MemoryStream ms = new MemoryStream())
+                    try
                     {
-                        response.GetResponseStream().CopyTo(ms);
-                        httpResult.FileByte = ms.ToArray();
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            response.GetResponseStream().CopyTo(ms);
+                            httpResult.FileByte = ms.ToArray();
+                        }
                     }
-                    if (responseHeaders.ContentLength == 0) responseHeaders.ContentLength = httpResult.FileByte.Length;
+                    catch (Exception ex)
+                    {
+                        Log(ex);
+                    }
+                    if (responseHeaders?.ContentLength == 0) responseHeaders.ContentLength = httpResult.FileByte.Length;
                 }
-
-
-
             }
             return httpResult;
         }
 
 
-        public  async Task<(bool, string, string)> CheckUpdate(string UpdateUrl)
+        public async Task<(bool, string, string)> CheckUpdate(string UpdateUrl)
         {
+            if (string.IsNullOrEmpty(UpdateUrl)) return (false, "", "");
             return await Task.Run(async () =>
             {
                 HttpResult httpResult = null;
@@ -266,28 +293,31 @@ namespace Jvedio.Utils.Net
                     httpResult = await Http(UpdateUrl);
                 }
                 catch (TimeoutException ex) { Log($"URL={UpdateUrl},Message-{ex.Message}"); }
-
-                if (httpResult == null || string.IsNullOrEmpty(httpResult.SourceCode)) return (false, "", "");
-
-                string remote = httpResult.SourceCode.Split('\n')[0];
+                if (httpResult == null || string.IsNullOrEmpty(httpResult.SourceCode) || httpResult.SourceCode.IndexOf('\n') < 0) return (false, "", "");
+                string remote = httpResult.SourceCode.Split('\n')[0].Replace("\r", "");
                 string updateContent = httpResult.SourceCode.Replace(remote + "\n", "");
                 string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-                using (StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "OldVersion"))
+                try
                 {
-                    sw.WriteLine(local + "\n");
-                    sw.WriteLine(updateContent);
+                    using (StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "OldVersion"))
+                    {
+                        sw.WriteLine(local + "\n");
+                        sw.WriteLine(updateContent);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log(ex.Message);
                 }
                 return (true, remote, updateContent);
-
-
             });
         }
 
 
-        public async   Task<WebSite> CheckUrlType(string url)
+        public async Task<WebSite> CheckUrlType(string url)
         {
             WebSite webSite = WebSite.None;
+            if (string.IsNullOrEmpty(url)) return webSite;
             bool enablecookie = false;
             string label = "";
             (bool result, string title) = await TestAndGetTitle(url, enablecookie, "", label);
@@ -333,47 +363,57 @@ namespace Jvedio.Utils.Net
         }
 
 
-        public  async Task<(bool, string)> TestAndGetTitle(string Url, bool EnableCookie, string Cookie, string Label)
+        public async Task<(bool, string)> TestAndGetTitle(string Url, bool EnableCookie, string Cookie, string Label)
         {
             bool result = false;
             string title = "";
+            if (string.IsNullOrEmpty(Url)) return (result, title);
             HttpResult httpResult = null;
             if (EnableCookie)
             {
-                if (Label == "DB")
+                try
                 {
-                    httpResult = await Http(Url + "v/P2Rz9", new CrawlerHeader() { Cookies = Cookie });
-                    if (httpResult != null && httpResult.SourceCode.IndexOf("FC2-659341") >= 0)
+                    if (Label == "DB")
                     {
-                        result = true;
-                        title = "DB";
+                        httpResult = await Http(Url + "v/P2Rz9", new CrawlerHeader() { Cookies = Cookie });
+                        if (httpResult != null && httpResult.SourceCode.IndexOf("FC2-659341") >= 0)
+                        {
+                            result = true;
+                            title = "DB";
+                        }
+                        else result = false;
                     }
-                    else result = false;
+                    else if (Label == "DMM")
+                    {
+                        httpResult = await Http($"{Url}mono/dvd/-/search/=/searchstr=APNS-006/ ", new CrawlerHeader() { Cookies = Cookie });
+                        if (httpResult != null && httpResult.SourceCode.IndexOf("里美まゆ・川") >= 0)
+                        {
+                            result = true;
+                            title = "DMM";
+                        }
+                        else result = false;
+                    }
+                    else if (Label == "MOO")
+                    {
+                        httpResult = await Http($"{Url}movie/655358482fd14364 ", new CrawlerHeader() { Cookies = Cookie });
+                        if (httpResult != null && httpResult.SourceCode.IndexOf("SIVR-118") >= 0)
+                        {
+                            result = true;
+                            title = "MOO";
+                        }
+                        else result = false;
+                    }
                 }
-                else if (Label == "DMM")
+                catch (TimeoutException ex)
                 {
-                    httpResult = await Http($"{Url}mono/dvd/-/search/=/searchstr=APNS-006/ ", new CrawlerHeader() { Cookies = Cookie });
-                    if (httpResult != null && httpResult.SourceCode.IndexOf("里美まゆ・川") >= 0)
-                    {
-                        result = true;
-                        title = "DMM";
-                    }
-                    else result = false;
-                }
-                else if (Label == "MOO")
-                {
-                    httpResult = await Http($"{Url}movie/655358482fd14364 ", new CrawlerHeader() { Cookies = Cookie });
-                    if (httpResult != null && httpResult.SourceCode.IndexOf("SIVR-118") >= 0)
-                    {
-                        result = true;
-                        title = "MOO";
-                    }
-                    else result = false;
+                    Log(ex.Message);
                 }
             }
             else
             {
-                httpResult = await Http(Url, new CrawlerHeader() { Cookies = Cookie });
+                try { httpResult = await Http(Url, new CrawlerHeader() { Cookies = Cookie }); }
+                catch (TimeoutException ex) { Log(ex); }
+
                 if (httpResult != null)
                 {
                     result = true;
@@ -387,63 +427,13 @@ namespace Jvedio.Utils.Net
             return (result, title);
         }
 
-
-        public  async Task<bool> TestUrl(string Url, bool EnableCookie, string Cookie, string Label)
+        public async Task<HttpResult> DownLoadFile(string Url, WebProxy Proxy = null, string setCookie = "")
         {
-            return await Task.Run(async () =>
-            {
-                bool result = false;
-                HttpResult httpResult = null;
-                if (EnableCookie)
-                {
-                    if (Label == "DB")
-                    {
-                        httpResult = await Http(Url + "v/P2Rz9", new CrawlerHeader() { Cookies = Cookie });
-                        if (httpResult != null && httpResult.SourceCode.IndexOf("FC2-659341") >= 0) result = true;
-                    }
-                }
-                else
-                {
-                    httpResult = await Http(Url);
-                    if (httpResult != null && httpResult.SourceCode != "") result = true;
-                }
-                return result;
-            });
-        }
-
-
-
-
-        private  bool IsDomainAlive(string aDomain, int aTimeoutSeconds)
-        {
-            try
-            {
-                using (TcpClient client = new TcpClient())
-                {
-                    var result = client.BeginConnect(aDomain, 80, null, null);
-
-                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(aTimeoutSeconds));
-
-                    if (!success)
-                    {
-                        return false;
-                    }
-
-                    // we have connected
-                    client.EndConnect(result);
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                Log($" {Jvedio.Language.Resources.Url}：{aDomain}， {Jvedio.Language.Resources.Reason}：{e.Message}");
-            }
-            return false;
-        }
-        public  async Task<HttpResult> DownLoadFile(string Url, WebProxy Proxy = null, string setCookie = "")
-        {
+            HttpResult httpResult = null;
+            if (string.IsNullOrEmpty(Url)) return httpResult;
             SetCertificatePolicy();
-            HttpResult httpResult = await Http(Url, new CrawlerHeader() { Cookies = setCookie }, HttpMode.Stream);
+            try { httpResult = await Http(Url, new CrawlerHeader() { Cookies = setCookie }, HttpMode.Stream); }
+            catch (TimeoutException ex) { Log(ex); }
             return httpResult;
         }
 

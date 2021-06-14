@@ -187,6 +187,15 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
+        ///   查找类似 注意：只有 Bus 上存在才能同步 的本地化字符串。
+        /// </summary>
+        public static string ActressDownloadAttention {
+            get {
+                return ResourceManager.GetString("ActressDownloadAttention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 头像 的本地化字符串。
         /// </summary>
         public static string ActressImage {
@@ -313,7 +322,7 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
-        ///   查找类似 注：新添加的网址测试通过才能保存，服务器名称不为空才能修改【启用】 的本地化字符串。
+        ///   查找类似 注：新添加的网址测试通过才能保存，服务器名称不为空才能修改【启用】，除了指定服务器外，其他服务器不会保存 的本地化字符串。
         /// </summary>
         public static string Attention_UrlTest {
             get {

@@ -19,8 +19,8 @@ namespace Jvedio
 
         protected string Url = "";//网址
         protected CrawlerHeader headers = new CrawlerHeader();
-        protected HttpResult httpResult=null;
-        
+        protected HttpResult httpResult = null;
+
 
 
         public string ID { get; set; }//必须给出视频 ID
@@ -66,11 +66,13 @@ namespace Jvedio
         public BusCrawler(string Id, VedioType vedioType) : base(Id)
         {
             VedioType = vedioType;
-            if (vedioType == VedioType.欧美) { 
-                Url = JvedioServers.BusEurope.Url + ID.Replace(".", "-"); 
+            if (vedioType == VedioType.欧美)
+            {
+                Url = JvedioServers.BusEurope.Url + ID.Replace(".", "-");
             }
-            else { 
-                Url = JvedioServers.Bus.Url + ID.ToUpper(); 
+            else
+            {
+                Url = JvedioServers.Bus.Url + ID.ToUpper();
             }
 
         }
@@ -78,10 +80,10 @@ namespace Jvedio
         public override async Task<HttpResult> Crawl()
         {
             if (Url.IsProperUrl()) InitHeaders();
-            httpResult = await new MyNet().Http(Url,headers);
+            httpResult = await new MyNet().Http(Url, headers);
             if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != null)
             {
-                FileProcess.SaveInfo(GetInfo(), ID,(int)VedioType);
+                FileProcess.SaveInfo(GetInfo(), ID, (int)VedioType);
                 httpResult.Success = true;
                 ParseCookies(httpResult.Headers.SetCookie);
                 Movie movie = DataBase.SelectMovieByID(ID);
@@ -95,18 +97,18 @@ namespace Jvedio
 
         protected override void ParseCookies(string SetCookie)
         {
-            if (SetCookie == null) return;
+            if (string.IsNullOrEmpty(SetCookie)) return;
             List<string> Cookies = new List<string>();
-            var values = SetCookie.Split(new char[] { ',',';'}).ToList();
+            var values = SetCookie.Split(new char[] { ',', ';' }).ToList();
             foreach (var item in values)
             {
                 if (item.IndexOf('=') < 0) continue;
                 string key = item.Split('=')[0];
-                string value= item.Split('=')[1];
+                string value = item.Split('=')[1];
                 if (key == "__cfduid" || key == "PHPSESSID" || key == "existmag") Cookies.Add(key + "=" + value);
             }
             string cookie = string.Join(";", Cookies);
-            if(VedioType==VedioType.欧美)
+            if (VedioType == VedioType.欧美)
                 JvedioServers.BusEurope.Cookie = cookie;
             else
                 JvedioServers.Bus.Cookie = cookie;
@@ -116,15 +118,15 @@ namespace Jvedio
 
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() { Cookies=VedioType==VedioType.欧美?JvedioServers.BusEurope.Cookie: JvedioServers.Bus.Cookie };
+            headers = new CrawlerHeader() { Cookies = VedioType == VedioType.欧美 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
         }
 
 
         protected override Dictionary<string, string> GetInfo()
         {
             Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VedioType).Parse();
-            if (Info.Count >0) 
-            { 
+            if (Info.Count > 0)
+            {
                 Info.Add("sourceurl", Url);
                 Info.Add("source", "javbus");
                 Task.Delay(Delay.SHORT_3).Wait();
@@ -139,29 +141,32 @@ namespace Jvedio
 
         public FC2Crawler(string Id) : base(Id)
         {
-             Url =$"{JvedioServers.FC2.Url}article/{ID.ToUpper().Replace("FC2-","")}/"; 
+            Url = $"{JvedioServers.FC2.Url}article/{ID.ToUpper().Replace("FC2-", "")}/";
         }
 
 
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() {
+            headers = new CrawlerHeader()
+            {
                 Cookies = JvedioServers.FC2.Cookie
-                };
+            };
         }
 
+
+        //TODO 国际化
         public override async Task<HttpResult> Crawl()
         {
             if (Url.IsProperUrl()) InitHeaders();
             httpResult = await new MyNet().Http(Url, headers);
             if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != null)
             {
-                if(httpResult.SourceCode.IndexOf("非常抱歉，此商品未在您的居住国家公开") < 0 && httpResult.SourceCode.IndexOf("非常抱歉，找不到您要的商品") < 0)
+                if (httpResult.SourceCode.IndexOf("非常抱歉，此商品未在您的居住国家公开") < 0 && httpResult.SourceCode.IndexOf("非常抱歉，找不到您要的商品") < 0)
                 {
                     FileProcess.SaveInfo(GetInfo(), ID);
                     httpResult.Success = true;
                 }
-                else if (httpResult.SourceCode.IndexOf("非常抱歉，此商品未在您的居住国家公开") > 0 )
+                else if (httpResult.SourceCode.IndexOf("非常抱歉，此商品未在您的居住国家公开") > 0)
                 {
                     httpResult.StatusCode = HttpStatusCode.Forbidden;
                     httpResult.Success = false;
@@ -196,7 +201,7 @@ namespace Jvedio
 
         protected override void ParseCookies(string SetCookie)
         {
-            if (SetCookie == null) return;
+            if (string.IsNullOrEmpty(SetCookie)) return;
             if (JvedioServers.FC2.Cookie != "") return;
             List<string> Cookies = new List<string>();
             var values = SetCookie.Split(new char[] { ',', ';' }).ToList();
@@ -223,12 +228,13 @@ namespace Jvedio
         }
         protected override void InitHeaders()
         {
-            headers = new CrawlerHeader() {
+            headers = new CrawlerHeader()
+            {
                 Cookies = JvedioServers.DB.Cookie
             };
         }
 
-        public  async Task<string> GetMovieCode(Action<string> callback=null)
+        public async Task<string> GetMovieCode(Action<string> callback = null)
         {
             //先从数据库获取
             string movieCode = DataBase.SelectInfoByID("code", "javdb", ID);
@@ -237,7 +243,7 @@ namespace Jvedio
                 //从网络获取
                 HttpResult result = await new MyNet().Http(Url, headers, allowRedirect: false);
                 if (result != null && result.StatusCode == HttpStatusCode.Redirect) callback?.Invoke(Jvedio.Language.Resources.SearchTooFrequent);
-                if (result!=null && result.SourceCode!="") 
+                if (result != null && result.SourceCode != "")
                     movieCode = GetMovieCodeFromSearchResult(result.SourceCode);
 
                 //存入数据库
@@ -253,6 +259,8 @@ namespace Jvedio
         protected string GetMovieCodeFromSearchResult(string content)
         {
             string result = "";
+            if (string.IsNullOrEmpty(content)) return result;
+
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(content);
 
@@ -275,7 +283,7 @@ namespace Jvedio
 
         public override async Task<HttpResult> Crawl()
         {
-            Movie movie= DataBase.SelectMovieByID(ID);
+            Movie movie = DataBase.SelectMovieByID(ID);
 
             if (!string.IsNullOrEmpty(movie.sourceurl) && movie.sourceurl.IsProperUrl())
             {
@@ -284,7 +292,8 @@ namespace Jvedio
             }
             else
             {
-                MovieCode = await GetMovieCode((error) => {
+                MovieCode = await GetMovieCode((error) =>
+                {
                     httpResult = new HttpResult() { Error = error, Success = false };
                 });
             }
@@ -299,7 +308,7 @@ namespace Jvedio
                     FileProcess.SaveInfo(GetInfo(), ID);
                     httpResult.Success = true;
                     //保存磁力
-                    List<Magnet> magnets =  new JavDBParse(ID, httpResult.SourceCode, MovieCode).ParseMagnet();
+                    List<Magnet> magnets = new JavDBParse(ID, httpResult.SourceCode, MovieCode).ParseMagnet();
                     if (magnets.Count > 0)
                         DataBase.SaveMagnets(magnets);
 
@@ -319,7 +328,7 @@ namespace Jvedio
         protected override Dictionary<string, string> GetInfo()
         {
             Dictionary<string, string> Info = new JavDBParse(ID, httpResult.SourceCode, MovieCode).Parse();
-            if (Info.Count > 0) 
+            if (Info.Count > 0)
             {
                 Info.Add("id", ID);
                 Info.Add("sourceurl", Url);
@@ -341,22 +350,23 @@ namespace Jvedio
             if (Url.IsProperUrl()) InitHeaders();
         }
 
-        protected  async Task<string> GetMovieCode()
+        protected async Task<string> GetMovieCode()
         {
-            string movieCode=DataBase.SelectInfoByID("code", "library", ID);
+            string movieCode = DataBase.SelectInfoByID("code", "library", ID);
             //先从数据库获取
             if (string.IsNullOrEmpty(movieCode) || movieCode.IndexOf("zh-cn") >= 0)
             {
-                HttpResult result= await new MyNet().Http(Url,headers, Mode: HttpMode.RedirectGet);
+                HttpResult result = await new MyNet().Http(Url, headers, Mode: HttpMode.RedirectGet);
                 if (result != null && result.StatusCode == HttpStatusCode.Redirect) movieCode = result.Headers.Location;
-                else if(result!=null) movieCode = GetMovieCodeFromSearchResult(result.SourceCode);
+                else if (result != null) movieCode = GetMovieCodeFromSearchResult(result.SourceCode);
 
                 if (movieCode.IndexOf("=") >= 0) movieCode = movieCode.Split('=').Last();
             }
 
             //存入数据库
-            if (movieCode != "" && movieCode.IndexOf("zh-cn") < 0) { 
-                DataBase.SaveMovieCodeByID(ID, "library", movieCode); 
+            if (movieCode != "" && movieCode.IndexOf("zh-cn") < 0)
+            {
+                DataBase.SaveMovieCodeByID(ID, "library", movieCode);
             }
 
             return movieCode;
@@ -377,7 +387,7 @@ namespace Jvedio
                 {
                     if (node == null) continue;
                     id = node.InnerText;
-                    if(!string.IsNullOrEmpty(id) && id.ToUpper() == ID.ToUpper())
+                    if (!string.IsNullOrEmpty(id) && id.ToUpper() == ID.ToUpper())
                     {
                         linknode = node.ParentNode;
                         if (linknode != null)
@@ -389,7 +399,7 @@ namespace Jvedio
 
                     }
                 }
-                }
+            }
 
 
             return result;
@@ -422,7 +432,7 @@ namespace Jvedio
 
         protected override void ParseCookies(string SetCookie)
         {
-            if (SetCookie == null) return;
+            if (string.IsNullOrEmpty(SetCookie)) return;
             List<string> Cookies = new List<string>();
             var values = SetCookie.Split(new char[] { ',', ';' }).ToList();
             foreach (var item in values)
@@ -442,7 +452,7 @@ namespace Jvedio
         {
             Dictionary<string, string> Info = new LibraryParse(ID, httpResult.SourceCode).Parse();
             if (Info.Count > 0)
-            { 
+            {
                 Info.Add("id", ID);
                 Info.Add("sourceurl", Url);
                 Info.Add("source", "javlibrary");
@@ -458,7 +468,7 @@ namespace Jvedio
     {
 
         protected string MovieCode = "";
-        protected bool OnlyPlot;
+        protected bool OnlyPlot;//是否仅爬取摘要
         public FANZACrawler(string Id, bool onlyPlot = false) : base(Id)
         {
             Url = $"{JvedioServers.DMM.Url}search/?redirect=1&enc=UTF-8&category=mono_dvd&searchstr={ID}&commit.x=5&commit.y=18";
@@ -466,18 +476,18 @@ namespace Jvedio
             OnlyPlot = onlyPlot;
         }
 
-        protected  async Task<string> GetMovieCode()
+        protected async Task<string> GetMovieCode()
         {
             //从网络获取
             string movieCode = "";
             string link = "";
             HttpResult result = await new MyNet().Http(Url, headers, Mode: HttpMode.RedirectGet);
-            if (result != null && result.StatusCode == HttpStatusCode.Redirect) 
+            if (result != null && result.StatusCode == HttpStatusCode.Redirect)
                 link = result.Headers.Location;//https://www.dmm.co.jp/mono/dvd/-/search/=/searchstr=ABP-123/
 
-            if (link != "")
+            if (!string.IsNullOrEmpty(link))
             {
-                HttpResult newResult= await new MyNet().Http(link, headers);
+                HttpResult newResult = await new MyNet().Http(link, headers);
                 if (newResult != null && newResult.StatusCode == HttpStatusCode.OK)
                 {
                     if (newResult.SourceCode.IndexOf("に一致する商品は見つかりませんでした") > 0)
@@ -490,7 +500,7 @@ namespace Jvedio
                         movieCode = GetLinkFromSearchResult(newResult.SourceCode);
                     }
                 }
-                    
+
             }
             return movieCode;
         }
@@ -552,7 +562,7 @@ namespace Jvedio
                     if (!this.OnlyPlot)
                         FileProcess.SaveInfo(GetInfo(), ID);
                     else
-                        FileProcess.SavePartialInfo(GetInfo(),"plot", ID);
+                        FileProcess.SavePartialInfo(GetInfo(), "plot", ID);
                     httpResult.Success = true;
                 }
             }
@@ -564,7 +574,7 @@ namespace Jvedio
             Dictionary<string, string> Info = new Dictionary<string, string>();
             Info = new FanzaParse(ID, httpResult.SourceCode).Parse();
             if (Info.Count > 0)
-            { 
+            {
                 Info.Add("id", ID);
                 Info.Add("sourceurl", Url);
                 Info.Add("source", "FANZA");
@@ -611,13 +621,13 @@ namespace Jvedio
             //未找到
 
             //搜索太频繁
-            
+
             return "";
         }
 
         protected string GetMovieCodeFromSearchResult(string content)
         {
-            
+
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(content);
 
@@ -627,11 +637,11 @@ namespace Jvedio
                 foreach (HtmlNode gridNode in gridNodes)
                 {
                     HtmlNode htmlNode = gridNode.SelectSingleNode("div/span/date");
-                    if (htmlNode!=null && htmlNode.InnerText.ToUpper() == ID.ToUpper())
+                    if (htmlNode != null && htmlNode.InnerText.ToUpper() == ID.ToUpper())
                     {
                         string link = gridNode.Attributes["href"]?.Value;
-                        if (!string.IsNullOrEmpty(link) && link.IndexOf("/")>0)return link.Split('/').Last();
-                        
+                        if (!string.IsNullOrEmpty(link) && link.IndexOf("/") > 0) return link.Split('/').Last();
+
                     }
                 }
             }
@@ -642,7 +652,8 @@ namespace Jvedio
 
         public override async Task<HttpResult> Crawl()
         {
-            MovieCode = await GetMovieCode((error) => {
+            MovieCode = await GetMovieCode((error) =>
+            {
                 httpResult = new HttpResult() { Error = error, Success = false };
             });
             if (MovieCode != "")
@@ -661,7 +672,7 @@ namespace Jvedio
 
         protected override void ParseCookies(string SetCookie)
         {
-            return ;
+            return;
         }
 
 
@@ -689,19 +700,20 @@ namespace Jvedio
             Url = JvedioServers.Jav321.Url + $"search";
         }
 
-        protected  void InitHeaders(string postdata)
+        protected void InitHeaders(string postdata)
         {
             //sn=pppd-093
             if (!Url.IsProperUrl()) return;
             Uri uri = new Uri(Url);
-            headers = new CrawlerHeader() {
-                
-                ContentLength=postdata.Length+3,
-                Origin= uri.Scheme + "://"+ uri.Host,
-                ContentType= "application/x-www-form-urlencoded",
-                Referer= uri.Scheme + "://" + uri.Host,
-                Method="POST",
-                Cookies=JvedioServers.Jav321.Cookie
+            headers = new CrawlerHeader()
+            {
+
+                ContentLength = postdata.Length + 3,
+                Origin = uri.Scheme + "://" + uri.Host,
+                ContentType = "application/x-www-form-urlencoded",
+                Referer = uri.Scheme + "://" + uri.Host,
+                Method = "POST",
+                Cookies = JvedioServers.Jav321.Cookie
             };
         }
 
@@ -716,7 +728,7 @@ namespace Jvedio
         {
             //从网络获取
             InitHeaders(ID);
-            HttpResult result = await new MyNet().Http(Url, headers, allowRedirect: false,postString:$"sn={ID}");
+            HttpResult result = await new MyNet().Http(Url, headers, allowRedirect: false, postString: $"sn={ID}");
             if (result != null && result.StatusCode == HttpStatusCode.MovedPermanently && !string.IsNullOrEmpty(result.Headers.Location))
             {
                 return result.Headers.Location;
@@ -731,11 +743,12 @@ namespace Jvedio
         public override async Task<HttpResult> Crawl()
         {
             //从网络获取
-            
-            MovieCode = await GetMovieCode((error) => {
+
+            MovieCode = await GetMovieCode((error) =>
+            {
                 httpResult = new HttpResult() { Error = error, Success = false };
             });
-            if ( MovieCode.Length>1)
+            if (MovieCode.Length > 1)
             {
                 InitHeaders();
                 Url = JvedioServers.Jav321.Url + MovieCode.Substring(1);
@@ -750,7 +763,7 @@ namespace Jvedio
             return httpResult;
         }
 
-        
+
 
 
         protected override Dictionary<string, string> GetInfo()
@@ -769,7 +782,7 @@ namespace Jvedio
 
         protected override void ParseCookies(string SetCookie)
         {
-            if (SetCookie == null) return;
+            if (string.IsNullOrEmpty(SetCookie)) return;
             List<string> Cookies = new List<string>();
             var values = SetCookie.Split(new char[] { ',', ';' }).ToList();
             foreach (var item in values)

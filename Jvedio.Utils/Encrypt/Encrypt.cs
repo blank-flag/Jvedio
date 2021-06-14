@@ -25,14 +25,12 @@ namespace Jvedio.Utils.Encrypt
         {
             if (string.IsNullOrEmpty(str)) return null;
             Byte[] toEncryptArray = Encoding.UTF8.GetBytes(str);
-
             RijndaelManaged rm = new RijndaelManaged
             {
                 Key = Encoding.UTF8.GetBytes(key),
                 Mode = CipherMode.ECB,
                 Padding = PaddingMode.PKCS7
             };
-
             ICryptoTransform cTransform = rm.CreateEncryptor();
             Byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
             return Convert.ToBase64String(resultArray);
@@ -81,13 +79,22 @@ namespace Jvedio.Utils.Encrypt
 
         public static string GetFileMD5(string filename)
         {
-            using (var md5 = MD5.Create())
+            try
             {
-                using (var stream = File.OpenRead(filename))
+                using (var md5 = MD5.Create())
                 {
-                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                    using (var stream = File.OpenRead(filename))
+                    {
+                        return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return "";
+            }
+
         }
 
 
@@ -101,7 +108,7 @@ namespace Jvedio.Utils.Encrypt
             var total = "";
             foreach (var item in files)
             {
-                total += GetFileMD5(item).Substring(0,5);
+                total += GetFileMD5(item).Substring(0, 5);
             }
             return CalculateMD5Hash(total);
         }

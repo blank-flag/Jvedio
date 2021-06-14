@@ -27,6 +27,7 @@ namespace Jvedio
         }
 
 
+        //TODO 国际化
         public static Task<string> Youdao(string q)
         {
             string from = "auto";
@@ -92,6 +93,7 @@ namespace Jvedio
 
         public static string ComputeHash(string input, HashAlgorithm algorithm)
         {
+            if (string.IsNullOrEmpty(input) || algorithm == null) return "";
             Byte[] inputBytes = Encoding.UTF8.GetBytes(input);
             Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
             return BitConverter.ToString(hashedBytes).Replace("-", "");
@@ -100,48 +102,53 @@ namespace Jvedio
         public static string Post(string url, Dictionary<String, String> dic)
         {
             string result = "";
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            req.Method = "POST";
-            req.ContentType = "application/x-www-form-urlencoded";
-            StringBuilder builder = new StringBuilder();
-            int i = 0;
-            foreach (var item in dic)
+            if (string.IsNullOrEmpty(url)) return result;
+            try
             {
-                if (i > 0)
-                    builder.Append("&");
-                builder.AppendFormat("{0}={1}", item.Key, item.Value);
-                i++;
-            }
-            byte[] data = Encoding.UTF8.GetBytes(builder.ToString());
-            req.ContentLength = data.Length;
-            using (Stream reqStream = req.GetRequestStream())
-            {
-                reqStream.Write(data, 0, data.Length);
-                reqStream.Close();
-            }
-            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-            if (resp.ContentType.ToLower().Equals("audio/mp3"))
-            {
-                SaveBinaryFile(resp, "合成的音频存储路径");
-            }
-            else
-            {
-                Stream stream = resp.GetResponseStream();
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                req.Method = "POST";
+                req.ContentType = "application/x-www-form-urlencoded";
+                StringBuilder builder = new StringBuilder();
+                int i = 0;
+                foreach (var item in dic)
                 {
-                    result = reader.ReadToEnd();
+                    if (i > 0)
+                        builder.Append("&");
+                    builder.AppendFormat("{0}={1}", item.Key, item.Value);
+                    i++;
                 }
-                return result;
+                byte[] data = Encoding.UTF8.GetBytes(builder.ToString());
+                req.ContentLength = data.Length;
+                using (Stream reqStream = req.GetRequestStream())
+                {
+                    reqStream.Write(data, 0, data.Length);
+                    reqStream.Close();
+                }
+                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                if (resp.ContentType.ToLower().Equals("audio/mp3"))
+                {
+                    SaveBinaryFile(resp, "合成的音频存储路径");
+                }
+                else
+                {
+                    Stream stream = resp.GetResponseStream();
+                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                    {
+                        result = reader.ReadToEnd();
+                    }
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogN(ex.Message);
             }
             return "";
         }
 
         public static string Truncate(string q)
         {
-            if (q == null)
-            {
-                return null;
-            }
+            if (string.IsNullOrEmpty(q)) return null;
             int len = q.Length;
             return len <= 20 ? q : (q.Substring(0, 10) + len + q.Substring(len - 10, 10));
         }

@@ -1244,7 +1244,7 @@
 
 
                                                                             <!--播放按钮-->
-                                                                            <Canvas ToolTip="{Binding id,Mode=OneWay}" Margin="10 0 10 0" Opacity="0.5"  Style="{StaticResource HoverCanvas}" MouseLeftButtonUp="PlayVedio"  Cursor="Hand" Width="40" Height="40"  VerticalAlignment="Center" HorizontalAlignment="Center"  >
+                                                                            <Canvas ToolTip="{Binding id,Mode=OneWay}" Margin="10 0 10 0" Opacity="0.5"  Style="{StaticResource HoverCanvas}" MouseLeftButtonUp="PlayVideo"  Cursor="Hand" Width="40" Height="40"  VerticalAlignment="Center" HorizontalAlignment="Center"  >
                                                                                 <Ellipse Fill="#DD744C"  Width="40" Height="40" Canvas.Left="3" Canvas.Top="3"  />
                                                                                 <Polygon Points="15,38 35,25 15,10" Stroke="{DynamicResource BackgroundMenu}" Fill="#F6F7F7"  Cursor="Hand" />
                                                                             </Canvas>
@@ -1366,7 +1366,7 @@
                                                                                 <Image Source="/Resources/Picture/subsection1.png" Height="20" Width="20"  />
                                                                             </Button>
                                                                             <!--播放按钮-->
-                                                                            <Canvas ToolTip="{Binding id,Mode=OneWay}"     Margin="10 0 10 0" Opacity="0.5"  Style="{StaticResource HoverCanvas}" MouseLeftButtonUp="PlayVedio"  Cursor="Hand" Width="40" Height="40"  VerticalAlignment="Center" HorizontalAlignment="Center"  >
+                                                                            <Canvas ToolTip="{Binding id,Mode=OneWay}"     Margin="10 0 10 0" Opacity="0.5"  Style="{StaticResource HoverCanvas}" MouseLeftButtonUp="PlayVideo"  Cursor="Hand" Width="40" Height="40"  VerticalAlignment="Center" HorizontalAlignment="Center"  >
                                                                                 <Ellipse Fill="#DD744C"  Width="40" Height="40" Canvas.Left="3" Canvas.Top="3"  />
                                                                                 <Polygon Points="15,38 35,25 15,10" Stroke="{DynamicResource BackgroundMenu}" Fill="#F6F7F7"  Cursor="Hand" />
                                                                             </Canvas>

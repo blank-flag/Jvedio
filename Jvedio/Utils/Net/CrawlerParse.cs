@@ -14,6 +14,7 @@ using Jvedio.Utils.Net;
 namespace Jvedio
 {
 
+    //TODO 封装成 DLL
     public abstract class InfoParse
     {
         protected string HtmlText { get; set; }
@@ -163,11 +164,11 @@ namespace Jvedio
                 {
                     if (string.IsNullOrEmpty(item)) continue;
                     if (VedioType == VedioType.骑兵)
-                        url_a.Add($"https://pics.javcdn.net/actress/" + item + "_a.jpg");
+                        url_a.Add($"{JvedioServers.Bus.Url}pics/actress/{item}_a.jpg");
                     else if (VedioType == VedioType.欧美)
                         url_a.Add(JvedioServers.BusEurope.Url.Replace("www", "images") + "actress/" + item + "_a.jpg");//https://images.javbus.one/actress/41r_a.jpg
                     else if (VedioType == VedioType.步兵)
-                        url_a.Add($"https://images.javcdn.net/actress/" + item + ".jpg");//步兵没有 _a
+                        url_a.Add($"{JvedioServers.Bus.Url}imgs/actress/{item}.jpg");//步兵没有 _a
                 }
                 result.Add("actressimageurl", string.Join(";", url_a));
             }
@@ -180,8 +181,10 @@ namespace Jvedio
                 bigimageurl = bigimgeNodes[0].Attributes["href"]?.Value;
                 if (!string.IsNullOrEmpty(bigimageurl))
                 {
+                    if (bigimageurl.IndexOf("http") < 0) bigimageurl = JvedioServers.Bus.Url + bigimageurl.Substring(1);
                     result.Add("bigimageurl", bigimageurl);
-                    movieid = System.IO.Path.GetFileNameWithoutExtension(new Uri(bigimageurl).LocalPath).Replace("_b", "");
+                    // => /pics/cover/89co_b.jpg
+                    movieid = bigimageurl.Split('/').Last().Split('.').First().Replace("_b", "");
                 }
 
 
@@ -195,11 +198,11 @@ namespace Jvedio
                 else if (!string.IsNullOrEmpty(movieid))
                 {
                     if (VedioType == VedioType.骑兵)
-                        result.Add("smallimageurl", "https://pics.javcdn.net/thumb/" + movieid + ".jpg");
+                        result.Add("smallimageurl", $"{JvedioServers.Bus.Url}pics/thumb/{movieid}.jpg");
                     else if (VedioType == VedioType.步兵)
-                        result.Add("smallimageurl", "https://images.javcdn.net/thumbs/" + movieid + ".jpg");
+                        result.Add("smallimageurl", $"{JvedioServers.Bus.Url}imgs/thumbs/{movieid}.jpg");
                     else if (VedioType == VedioType.欧美)
-                        result.Add("smallimageurl", "https://images.javbus.one/thumb/" + movieid + ".jpg");//https://images.javbus.one/thumb/10jc.jpg
+                        result.Add("smallimageurl", $"{JvedioServers.BusEurope.Url}thumb/" + movieid + ".jpg");
                 }
             }
 
@@ -312,7 +315,7 @@ namespace Jvedio
             {
                 string gid = gidMatch.Value.Replace("var gid = ", "");
                 string uc = ucMatch.Value.Replace("var uc = ", "");
-                string url = $"https://www.fanbus.cam/ajax/uncledatoolsbyajax.php?gid={gid}&lang=zh&img={bigimage}&uc={uc}";
+                string url = $"{JvedioServers.Bus.Url}ajax/uncledatoolsbyajax.php?gid={gid}&lang=zh&img={bigimage}&uc={uc}";
 
                 HttpResult httpResult = await new MyNet().Http(url, new CrawlerHeader() { Cookies = JvedioServers.Bus.Cookie });
                 if (httpResult != null && httpResult.SourceCode != "")
@@ -752,17 +755,18 @@ namespace Jvedio
                     //名称、 tag
                     foreach (var item in taginfos)
                     {
-                        if(item.IndexOf("GB")>0)
+                        if (item.IndexOf("GB") > 0)
                         {
                             Regex regex = new Regex(@"\d+\.?\d+GB");
                             var size = regex.Match(item);
-                            if(size.Success && size.Value.Length > 0)
+                            if (size.Success && size.Value.Length > 0)
                             {
-                                double.TryParse(size.Value.Replace("GB",""), out double filesize);
+                                double.TryParse(size.Value.Replace("GB", ""), out double filesize);
                                 magnet.size = filesize * 1024;
                             }
 
-                        }else if (item.IndexOf("MB") > 0)
+                        }
+                        else if (item.IndexOf("MB") > 0)
                         {
                             Regex regex = new Regex(@"\d+\.?\d+MB");
                             var size = regex.Match(item);
@@ -800,13 +804,13 @@ namespace Jvedio
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(sourceCode);
             HtmlNodeCollection movieNodes = doc.DocumentNode.SelectNodes("//div[@class='grid-item column']/a");
-            if (movieNodes == null || movieNodes.Count==0)
+            if (movieNodes == null || movieNodes.Count == 0)
                 movieNodes = doc.DocumentNode.SelectNodes("//div[@class='grid-item column horz-cover']/a");
-            if (movieNodes == null || movieNodes.Count==0) return result;
+            if (movieNodes == null || movieNodes.Count == 0) return result;
             foreach (HtmlNode movieNode in movieNodes)
             {
                 Movie movie = new Movie();
-                if (movieNode.Attributes["href"]?.Value != "") movie.sourceurl =JvedioServers.DB.Url + movieNode.Attributes["href"].Value.Substring(1);
+                if (movieNode.Attributes["href"]?.Value != "") movie.sourceurl = JvedioServers.DB.Url + movieNode.Attributes["href"].Value.Substring(1);
 
                 HtmlNode id = movieNode.SelectSingleNode("div[@class='uid']");
                 HtmlNode title = movieNode.SelectSingleNode("div[@class='video-title']");

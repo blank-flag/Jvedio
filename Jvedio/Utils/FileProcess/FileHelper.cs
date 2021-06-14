@@ -206,7 +206,19 @@ namespace Jvedio
             {
                 if (File.Exists(filename))
                 {
-                    Process.Start("\"" + filename + "\"");
+                    string cmdCommand = $"\"{processPath}\" \"{filename}\" && pause";
+                    using (Process process = new Process())
+                    {
+                        process.StartInfo.FileName = "cmd.exe";
+                        process.StartInfo.CreateNoWindow = true;
+                        process.StartInfo.UseShellExecute = false;
+                        process.StartInfo.RedirectStandardOutput = true;
+                        process.StartInfo.RedirectStandardError = true;
+                        process.StartInfo.RedirectStandardInput = true;//接受来自调用程序的输入信息
+                        process.Start();
+                        process.StandardInput.WriteLine(cmdCommand);
+                        process.WaitForExit(1000);
+                    }
                     return true;
                 }
 

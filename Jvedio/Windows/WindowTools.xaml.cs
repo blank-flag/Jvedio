@@ -169,8 +169,8 @@ namespace Jvedio
 
         public void AddNFOPath(object sender, RoutedEventArgs e)
         {
-            var path = FileHelper.SelectPath(this);
-            path = Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "DownLoad\\NFO") ? AppDomain.CurrentDomain.BaseDirectory + "DownLoad\\NFO" : AppDomain.CurrentDomain.BaseDirectory;
+            string path = FileHelper.SelectPath(this);
+            //path = Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "DownLoad\\NFO") ? AppDomain.CurrentDomain.BaseDirectory + "DownLoad\\NFO" : AppDomain.CurrentDomain.BaseDirectory;
             if (Directory.Exists(path))
             {
                 if (!vieModel.NFOScanPath.Contains(path) && !vieModel.NFOScanPath.IsIntersectWith(path))
@@ -581,7 +581,7 @@ namespace Jvedio
                     {
                         if (item.ToLower().IndexOf("poster") >= 0 || item.ToLower().IndexOf($"{id.ToLower()}_s") >= 0)
                         {
-                            FileHelper.TryCopyFile(item, GlobalVariable.BasePicPath + $"SmallPic\\{id}.jpg", true); 
+                            FileHelper.TryCopyFile(item, GlobalVariable.BasePicPath + $"SmallPic\\{id}.jpg", true);
 
 
                         }

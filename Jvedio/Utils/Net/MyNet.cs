@@ -15,9 +15,9 @@ namespace Jvedio
     /// <summary>
     /// 每次访问一个网址都实例化一个网络对象
     /// </summary>
-    public  class MyNet:Net
+    public class MyNet : Net
     {
-        public MyNet():base(new int[] {
+        public MyNet() : base(new int[] {
                                  Properties.Settings.Default.Timeout_tcp,
                                  Properties.Settings.Default.Timeout_forcestop,
                                   Properties.Settings.Default.Timeout_http * 1000,
@@ -70,7 +70,7 @@ namespace Jvedio
             }
             else
             {
-                if (httpResult.Headers.SetCookie != null)
+                if (httpResult.Headers?.SetCookie != null)
                     cookie = httpResult.Headers.SetCookie.Split(';')[0];
                 else
                     cookie = Cookie;
@@ -146,7 +146,7 @@ namespace Jvedio
 
             if (!File.Exists(GlobalVariable.BasePicPath + $"BigPic\\{dm.id}.jpg"))
             {
-                return await  DownLoadImage(dm.bigimageurl, ImageType.BigImage, dm.id);
+                return await DownLoadImage(dm.bigimageurl, ImageType.BigImage, dm.id);
             }
             else
             {
@@ -321,7 +321,7 @@ namespace Jvedio
             }
 
             Movie newMovie = DataBase.SelectMovieByID(movie.id);
-            if (newMovie != null && newMovie.title != "" && httpResult != null && httpResult.Error=="") httpResult.Success = true;
+            if (newMovie != null && newMovie.title != "" && httpResult != null && httpResult.Error == "") httpResult.Success = true;
             if (httpResult == null && message != "") httpResult = new HttpResult() { Error = message, Success = false };
             return httpResult;
         }

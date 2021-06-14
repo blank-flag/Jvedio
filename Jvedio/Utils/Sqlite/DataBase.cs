@@ -942,10 +942,7 @@ namespace Jvedio
         /// <param name="webSite"></param>
         public static void UpdateInfoFromNet(Dictionary<string, string> info)
         {
-            if (info == null) return;
-            if (!info.ContainsKey("id")) return;
-            if (info.ContainsKey("id") && string.IsNullOrEmpty(info["id"])) return;
-
+            if (info == null || !info.ContainsKey("id") || string.IsNullOrEmpty(info["id"])) return;
             Init();
             using (MySqlite mySqlite = new MySqlite(SqlitePath, true))
             {

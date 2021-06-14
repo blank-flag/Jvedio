@@ -1513,6 +1513,9 @@ namespace Jvedio.ViewModel
 
 
 
+        /// <summary>
+        /// 流动加载影片
+        /// </summary>
         public void Flow()
         {
             if (FilterMovieList == null) return;
