@@ -46,42 +46,6 @@
     <Color x:Key="Color_ForegroundSearch"  >#FFFFFF</Color>
     <Color x:Key="Color_BorderBursh"  >Transparent</Color>
 
-
-
-    <!--白色皮肤-->
-    <!--<Color x:Key="Color_BackgroundTitle"  >#E2E3E5</Color>
-    <Color x:Key="Color_BackgroundMain"  >#F9F9F9</Color>
-    <Color x:Key="Color_BackgroundSide"  >#F2F3F4</Color>
-    <Color x:Key="Color_BackgroundTab"  >#FFF5EE</Color>
-    <Color x:Key="Color_BackgroundSearch"  >#D1D1D1</Color>
-    <Color x:Key="Color_BackgroundMenu" >#FFFFFF</Color>
-    <Color x:Key="Color_ForegroundGlobal"  >#555555</Color>
-    <Color x:Key="Color_ForegroundSearch"  >#000000</Color>
-    <Color x:Key="Color_BorderBursh"  >#CECECE</Color>-->
-
-
-    <!--Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#0B72BD");
-                Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#2BA2D2");
-                Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#61AEDA");
-                Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#3DBEDE");
-                Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#87CEEB");
-                Application.Current.Resources["Color_BackgroundMenu"] = Colors.SkyBlue;
-                Application.Current.Resources["Color_ForegroundGlobal"] = Colors.White;
-                Application.Current.Resources["Color_ForegroundSearch"] = Colors.White;
-                Application.Current.Resources["Color_BorderBursh"] = (Color)ColorConverter.ConvertFromString("#95DCED");-->
-
-    <!--蓝色皮肤-->
-    <!--<Color x:Key="Color_BackgroundTitle"  >#0288D1</Color>
-    <Color x:Key="Color_BackgroundMain"  >#2BA2D2</Color>
-    <Color x:Key="Color_BackgroundSide"  >#03A9F5</Color>
-    <Color x:Key="Color_BackgroundTab"  >#0288D1</Color>
-    <Color x:Key="Color_BackgroundSearch"  >#87CEEB</Color>
-    <Color x:Key="Color_BackgroundMenu" >skyblue</Color>
-    <Color x:Key="Color_ForegroundGlobal"  >white</Color>
-    <Color x:Key="Color_ForegroundSearch"  >white</Color>
-    <Color x:Key="Color_BorderBursh"  >#95DCED</Color>-->
-
-
     <SolidColorBrush x:Key="BackgroundTitle"  Color="{DynamicResource Color_BackgroundTitle}"/>
     <SolidColorBrush x:Key="BackgroundMain" Color="{DynamicResource Color_BackgroundMain}" />
     <SolidColorBrush x:Key="BackgroundSide"  Color="{DynamicResource Color_BackgroundSide}" />

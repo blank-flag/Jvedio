@@ -1240,6 +1240,11 @@ namespace Jvedio
         {
             Properties.Settings.Default.ScanRe = (sender as TextBox).Text.Replace("；", ";");
         }
+
+        private void OpenDIY(object sender, RoutedEventArgs e)
+        {
+            FileHelper.TryOpenUrl(ThemeDIY, GrowlToken);
+        }
     }
 
 

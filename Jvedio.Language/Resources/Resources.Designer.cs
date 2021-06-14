@@ -1402,6 +1402,15 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
+        ///   查找类似 获取 的本地化字符串。
+        /// </summary>
+        public static string Get {
+            get {
+                return ResourceManager.GetString("Get", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 获取摘要 的本地化字符串。
         /// </summary>
         public static string GetPlot {

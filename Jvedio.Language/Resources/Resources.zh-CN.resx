@@ -1737,4 +1737,7 @@
   <data name="Name" xml:space="preserve">
     <value>名称</value>
   </data>
+  <data name="Get" xml:space="preserve">
+    <value>获取</value>
+  </data>
 </root>
