@@ -12,6 +12,8 @@ using System.IO;
 using static Jvedio.GlobalVariable;
 using static Jvedio.FileProcess;
 using Jvedio.Utils;
+using Jvedio.Core.pojo;
+using Jvedio.Core;
 
 namespace Jvedio.ViewModel
 {
@@ -22,6 +24,12 @@ namespace Jvedio.ViewModel
         {
             DataBase = Path.GetFileNameWithoutExtension(Properties.Settings.Default.DataBasePath);
             DataBases = ((Main)FileProcess.GetWindowByName("Main")).vieModel.DataBases;
+            ThemeList = new ObservableCollection<Theme>();
+            foreach (Theme theme in ThemeLoader.Themes)
+            {
+                if (theme.Name == Skin.白色.ToString() || theme.Name == Skin.黑色.ToString() || theme.Name == Skin.蓝色.ToString()) continue;
+                ThemeList.Add(theme);
+            }
         }
 
 
@@ -29,7 +37,7 @@ namespace Jvedio.ViewModel
         {
             //读取配置文件
             ScanPath = new ObservableCollection<string>();
-            foreach(var item in ReadScanPathFromConfig(DataBase))
+            foreach (var item in ReadScanPathFromConfig(DataBase))
             {
                 ScanPath.Add(item);
             }
@@ -42,7 +50,7 @@ namespace Jvedio.ViewModel
             {
                 System.Reflection.PropertyInfo propertyInfo = type.GetProperty(item.Name);
                 Server server = (Server)propertyInfo.GetValue(JvedioServers);
-                if(server.Url!="")
+                if (server.Url != "")
                     Servers.Add(server);
             }
         }
@@ -61,7 +69,17 @@ namespace Jvedio.ViewModel
         }
 
 
+        private ObservableCollection<Theme> _ThemeList;
 
+        public ObservableCollection<Theme> ThemeList
+        {
+            get { return _ThemeList; }
+            set
+            {
+                _ThemeList = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         private ObservableCollection<Server> _Servers;
@@ -77,7 +95,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private ObservableCollection<string> _ScanPath ;
+        private ObservableCollection<string> _ScanPath;
 
         public ObservableCollection<string> ScanPath
         {
@@ -115,7 +133,7 @@ namespace Jvedio.ViewModel
             }
         }
 
-        private string _DataBase  ;
+        private string _DataBase;
 
         public string DataBase
         {
@@ -141,7 +159,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        
+
 
 
 

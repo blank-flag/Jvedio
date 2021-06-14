@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Xml;
 using static Jvedio.GlobalVariable;
 using Jvedio.Utils;
+using Jvedio.Core;
+using Jvedio.Core.pojo;
 
 namespace Jvedio
 {
@@ -23,46 +25,59 @@ namespace Jvedio
     public static class FileProcess
     {
 
-        public static void SetSkin(string theme)
+        public static void SetSkin(string themeName)
         {
-            if (theme == "黑色")
-            {
-                Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#22252A");
-                Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#1B1B1F");
-                Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#101013");
-                Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#383838");
-                Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#18191B");
-                Application.Current.Resources["Color_BackgroundMenu"] = (Color)ColorConverter.ConvertFromString("#252526");
-                Application.Current.Resources["Color_ForegroundGlobal"] = (Color)ColorConverter.ConvertFromString("#AFAFAF");
-                Application.Current.Resources["Color_ForegroundSearch"] = Colors.White;
-                Application.Current.Resources["Color_BorderBursh"] = Colors.Transparent;
-            }
-            else if (theme == "白色")
-            {
-                Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#E2E3E5");
-                Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#F9F9F9");
-                Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#F2F3F4");
-                Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#FFF5EE");
-                Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#D1D1D1");
-                Application.Current.Resources["Color_BackgroundMenu"] = Colors.White;
-                Application.Current.Resources["Color_ForegroundGlobal"] = (Color)ColorConverter.ConvertFromString("#555555");
-                Application.Current.Resources["Color_ForegroundSearch"] = Colors.Black;
-                Application.Current.Resources["Color_BorderBursh"] = Colors.Gray;
-            }
-            else if (theme == "蓝色")
+            Theme theme = ThemeLoader.loadTheme(themeName);
+            Application.Current.Resources["Color_BackgroundTitle"] = theme.DisplayProperty.Title.MainBackground;
+            Application.Current.Resources["Color_BackgroundMain"] = theme.DisplayProperty.Display.MainBackground;
+            Application.Current.Resources["Color_BackgroundSide"] = theme.DisplayProperty.Side.MainBackground;
+            Application.Current.Resources["Color_BackgroundTab"] = theme.DisplayProperty.Tools.MainBackground;
+            Application.Current.Resources["Color_BackgroundSearch"] = theme.DisplayProperty.Search.MainBackground;
+            Application.Current.Resources["Color_BackgroundMenu"] = theme.DisplayProperty.Menu.MainBackground;
+            Application.Current.Resources["Color_ForegroundGlobal"] = theme.DisplayProperty.Global.MainForeground;
+            Application.Current.Resources["Color_ForegroundSearch"] = theme.DisplayProperty.Search.MainForeground;
+            Application.Current.Resources["Color_BorderBursh"] = Colors.Transparent;
 
-            {
-                Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#0288D1");
-                Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#2BA2D2");
-                Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#03A9F5");
-                Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#0288D1");
-                Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#87CEEB");
-                Application.Current.Resources["Color_BackgroundMenu"] = (Color)ColorConverter.ConvertFromString("#0288D1");
-                Application.Current.Resources["Color_ForegroundGlobal"] = Colors.White;
-                Application.Current.Resources["Color_ForegroundSearch"] = Colors.White;
-                Application.Current.Resources["Color_BorderBursh"] = (Color)ColorConverter.ConvertFromString("#95DCED");
 
-            }
+            //if (theme == "黑色")
+            //{
+            //    Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#22252A");
+            //    Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#1B1B1F");
+            //    Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#101013");
+            //    Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#383838");
+            //    Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#18191B");
+            //    Application.Current.Resources["Color_BackgroundMenu"] = (Color)ColorConverter.ConvertFromString("#252526");
+            //    Application.Current.Resources["Color_ForegroundGlobal"] = (Color)ColorConverter.ConvertFromString("#AFAFAF");
+            //    Application.Current.Resources["Color_ForegroundSearch"] = Colors.White;
+            //    Application.Current.Resources["Color_BorderBursh"] = Colors.Transparent;
+            //}
+            //else if (theme == "白色")
+            //{
+            //    Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#E2E3E5");
+            //    Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#F9F9F9");
+            //    Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#F2F3F4");
+            //    Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#FFF5EE");
+            //    Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#D1D1D1");
+            //    Application.Current.Resources["Color_BackgroundMenu"] = Colors.White;
+            //    Application.Current.Resources["Color_ForegroundGlobal"] = (Color)ColorConverter.ConvertFromString("#555555");
+            //    Application.Current.Resources["Color_ForegroundSearch"] = Colors.Black;
+            //    Application.Current.Resources["Color_BorderBursh"] = Colors.Gray;
+            //}
+            //else if (theme == "蓝色")
+
+            //{
+            //    Application.Current.Resources["Color_BackgroundTitle"] = (Color)ColorConverter.ConvertFromString("#0288D1");
+            //    Application.Current.Resources["Color_BackgroundMain"] = (Color)ColorConverter.ConvertFromString("#2BA2D2");
+            //    Application.Current.Resources["Color_BackgroundSide"] = (Color)ColorConverter.ConvertFromString("#03A9F5");
+            //    Application.Current.Resources["Color_BackgroundTab"] = (Color)ColorConverter.ConvertFromString("#0288D1");
+            //    Application.Current.Resources["Color_BackgroundSearch"] = (Color)ColorConverter.ConvertFromString("#87CEEB");
+            //    Application.Current.Resources["Color_BackgroundMenu"] = (Color)ColorConverter.ConvertFromString("#0288D1");
+            //    Application.Current.Resources["Color_ForegroundGlobal"] = Colors.White;
+            //    Application.Current.Resources["Color_ForegroundSearch"] = Colors.White;
+            //    Application.Current.Resources["Color_BorderBursh"] = (Color)ColorConverter.ConvertFromString("#95DCED");
+
+            //}
+
 
             Application.Current.Resources["BackgroundTitle"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BackgroundTitle"]);
             Application.Current.Resources["BackgroundMain"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BackgroundMain"]);

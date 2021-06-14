@@ -32,7 +32,7 @@ namespace Jvedio
 
         public static string BasePicPath = Directory.Exists(Properties.Settings.Default.BasePicPath) ?
             Properties.Settings.Default.BasePicPath : AppDomain.CurrentDomain.BaseDirectory + "Pic\\";
-        public static string[] InitDirs = new[] { "log", "DataBase", "BackUp", "Pic" };//初始化文件夹
+        public static string[] InitDirs = new[] { "log", "DataBase", "BackUp", "Pic", "Plugins/Themes", "Plugins/Crawlers" };//初始化文件夹
         public static string[] PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
 
 

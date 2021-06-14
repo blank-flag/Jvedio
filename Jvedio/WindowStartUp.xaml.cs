@@ -75,9 +75,11 @@ namespace Jvedio
             CheckFile(); //判断文件是否存在
             CheckSettings();//修复设置错误
             CreateDir();//创建文件夹
+
+
+
+            Jvedio.Core.ThemeLoader.loadAllThemes();
             SetSkin(Properties.Settings.Default.Themes);
-
-
             try
             {
                 statusText.Text = Jvedio.Language.Resources.Status_InitDatabase;

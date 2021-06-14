@@ -124,12 +124,7 @@
                         <RadioButton  FocusVisualStyle="{x:Null}"   GroupName="LangRadioButton"  Click="SetLanguage"   IsChecked="{Binding Language, ConverterParameter=日本語, Converter={StaticResource LanguageTypeEnumConverter}, Mode=TwoWay}"  Content="日本語"  Style="{StaticResource FlatRadioButton}"/>
                     </StackPanel>
 
-                    <WrapPanel x:Name="SkinWrapPanel" Orientation="Horizontal"  Margin="20 5">
-                        <Label  Style="{StaticResource InfoLabel}"  Content="{x:Static lang:Resources.Skin}"/>
-                        <RadioButton  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"   Content="黑色" Background="Black"  Style="{StaticResource ColorRadioButton}"  />
-                        <RadioButton  FocusVisualStyle="{x:Null}"   GroupName="SkinRadioButton"  Click="SetSkin"   Content="白色" Background="White"  Style="{StaticResource ColorRadioButton}"  />
-                        <RadioButton  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"  Content="蓝色" Background="#87CEFF"  Style="{StaticResource ColorRadioButton}"  />
-                    </WrapPanel>
+
 
                     <StackPanel Orientation="Horizontal"  Margin="20 5">
                         <Label Style="{StaticResource InfoLabel}"  Content="{x:Static lang:Resources.ImageSavePath}"/>
@@ -286,7 +281,7 @@
 
 
 
-                    <DataGrid Visibility="Visible" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Servers}" Background="{DynamicResource BackgroundMenu}" MinHeight="200"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"   PreviewMouseLeftButtonDown="SetCurrentRowIndex"  x:Name="ServersDataGrid" VerticalScrollBarVisibility="Disabled"   Foreground="{DynamicResource ForegroundSearch}" Margin="20 5" HorizontalGridLinesBrush="Transparent" VerticalGridLinesBrush="Transparent"  BorderThickness="0" CanUserResizeRows="False" CanUserResizeColumns="True"  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" CanUserSortColumns="True"    Style="{DynamicResource DataGridStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}"  RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" DragIndicatorStyle="{DynamicResource DataGridColumnHeaderStyle2}" DropLocationIndicatorStyle="{DynamicResource DataGridStyle2}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}">
+                    <DataGrid x:Name="ServersDataGrid" Visibility="Visible" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Servers}" Background="{DynamicResource BackgroundMenu}" MinHeight="200"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"   PreviewMouseLeftButtonDown="SetCurrentRowIndex"   VerticalScrollBarVisibility="Disabled"   Foreground="{DynamicResource ForegroundSearch}" Margin="20 5" HorizontalGridLinesBrush="Transparent" VerticalGridLinesBrush="Transparent"  BorderThickness="0" CanUserResizeRows="False" CanUserResizeColumns="True"  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" CanUserSortColumns="True"    Style="{DynamicResource DataGridStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}"  RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" DragIndicatorStyle="{DynamicResource DataGridColumnHeaderStyle2}" DropLocationIndicatorStyle="{DynamicResource DataGridStyle2}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}">
 
 
                         <DataGrid.Columns>
@@ -515,6 +510,51 @@
                         <Label Content="{Binding Value, ElementName=OpacitySlider}" Style="{StaticResource InfoLabel}"  />
 
                     </WrapPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem FontSize="15" Background="Transparent" Header="{x:Static lang:Resources.Theme}" >
+                <StackPanel >
+                    <WrapPanel x:Name="SkinWrapPanel" Orientation="Horizontal"  Margin="20 5">
+                        <Label  Style="{StaticResource InfoLabel}"  Content="{x:Static lang:Resources.Default}"/>
+                        <RadioButton  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"   Content="黑色" Background="Black"  Style="{StaticResource ColorRadioButton}"  />
+                        <RadioButton  FocusVisualStyle="{x:Null}"   GroupName="SkinRadioButton"  Click="SetSkin"   Content="白色" Background="White"  Style="{StaticResource ColorRadioButton}"  />
+                        <RadioButton  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"  Content="蓝色" Background="#87CEFF"  Style="{StaticResource ColorRadioButton}"  />
+                    </WrapPanel>
+
+                    <StackPanel    Margin="20 5">
+                        <Label  Style="{StaticResource InfoLabel}"  Content="{x:Static lang:Resources.MoreThemes}"/>
+                        <Button Content="{x:Static lang:Resources.DIY}" Style="{StaticResource ButtonStyleFill}" HorizontalAlignment="Left"  />
+
+
+                        <DataGrid x:Name="ThemesDataGrid" Visibility="Visible" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding ThemeList}" Background="{DynamicResource BackgroundMenu}" MinHeight="200"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"   PreviewMouseLeftButtonDown="SetCurrentRowIndex"   VerticalScrollBarVisibility="Disabled"   Foreground="{DynamicResource ForegroundSearch}" Margin="20 5" HorizontalGridLinesBrush="Transparent" VerticalGridLinesBrush="Transparent"  BorderThickness="0" CanUserResizeRows="False" CanUserResizeColumns="True"  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" CanUserSortColumns="True"    Style="{DynamicResource DataGridStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}"  RowHeaderStyle="{DynamicResource DataGridRowHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" DragIndicatorStyle="{DynamicResource DataGridColumnHeaderStyle2}" DropLocationIndicatorStyle="{DynamicResource DataGridStyle2}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}">
+
+
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="{x:Static lang:Resources.Enable}" Width="auto" MinWidth="40"   >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <RadioButton  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"   Content="{Binding Name,Mode=OneWay}" Background="{Binding DisplayProperty.Title.MainBackground,Mode=OneWay,Converter={StaticResource MyColorToBrushConverter}}"  Style="{StaticResource ColorRadioButton}"  />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.Name}" Width="auto" Binding="{Binding Name,Mode=OneWay}" />
+                                <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.Author}" Width="auto" Binding="{Binding Author,Mode=OneWay}" />
+                                <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.Date}" Width="auto" Binding="{Binding Date,Mode=OneWay}" />
+                                <DataGridTextColumn  IsReadOnly="True"   Header="{x:Static lang:Resources.Version}" Width="auto" Binding="{Binding Version,Mode=OneWay}" />
+
+                            </DataGrid.Columns>
+
+                            <!--<local:Server  IsEnable="True" Url="https://www.123.cam/" Cookie="123" Available="0" Name="123" LastRefreshDate="2020-09-04" />
+                        <local:Server IsEnable="False" Url="https://123.com/"  Cookie="123"  Available="0"  Name="123" LastRefreshDate="2020-10-05" />-->
+
+
+
+                        </DataGrid>
+
+                    </StackPanel>
+
                 </StackPanel>
             </TabItem>
 

@@ -1728,4 +1728,16 @@
   <data name="ActressDownloadAttention" xml:space="preserve">
     <value>注意：只有 Bus 上存在才能同步</value>
   </data>
+  <data name="MoreThemes" xml:space="preserve">
+    <value>更多主题</value>
+  </data>
+  <data name="DIY" xml:space="preserve">
+    <value>自定义</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>作者</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
 </root>

@@ -1728,4 +1728,16 @@
   <data name="ActressDownloadAttention" xml:space="preserve">
     <value>注意:bus上に存在している場合のみ同期できます</value>
   </data>
+  <data name="MoreThemes" xml:space="preserve">
+    <value>より多くの皮膚</value>
+  </data>
+  <data name="DIY" xml:space="preserve">
+    <value>カスタム</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>著者</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
 </root>

@@ -26,7 +26,7 @@ namespace Jvedio
     {
         //  (id VARCHAR(50) PRIMARY KEY, link TEXT , title TEXT , size TEXT, releasedate VARCHAR(10) DEFAULT '1900-01-01', tag TEXT)";
 
-        public Magnet():this("") { }
+        public Magnet() : this("") { }
 
 
         public Magnet(string id)
@@ -97,7 +97,7 @@ namespace Jvedio
             bigimage = DefaultBigImage;
             GifUri = new Uri("pack://application:,,,/Resources/Picture/NoPrinting_G.gif");
         }
-        public Movie():this("") {  }
+        public Movie() : this("") { }
 
         public virtual void Dispose()
         {
@@ -250,7 +250,7 @@ namespace Jvedio
                     if (JvedioServers.Bus.Url.IsProperUrl())
                     {
                         Uri uri = new Uri(JvedioServers.Bus.Url);
-                        result= uri1.OriginalString.Replace(uri1.Host, uri.Host);
+                        result = uri1.OriginalString.Replace(uri1.Host, uri.Host);
                     }
                 }
                 else if (Source == "JAVDB")
@@ -258,7 +258,7 @@ namespace Jvedio
                     if (JvedioServers.DB.Url.IsProperUrl())
                     {
                         Uri uri = new Uri(JvedioServers.DB.Url);
-                        result= uri1.OriginalString.Replace(uri1.Host, uri.Host);
+                        result = uri1.OriginalString.Replace(uri1.Host, uri.Host);
                     }
                 }
                 else if (Source == "javlibrary".ToUpper())
@@ -266,7 +266,7 @@ namespace Jvedio
                     if (JvedioServers.Library.Url.IsProperUrl())
                     {
                         Uri uri = new Uri(JvedioServers.Library.Url);
-                        result= uri1.OriginalString.Replace(uri1.Host, uri.Host);
+                        result = uri1.OriginalString.Replace(uri1.Host, uri.Host);
                     }
                 }
 
@@ -363,24 +363,24 @@ namespace Jvedio
 
         public VideoInfo()
         {
-            Format = ""; 
-            BitRate = ""; 
-            Duration = ""; 
-            FileSize = ""; 
-            Width = ""; 
-            Height = ""; 
-            Resolution = ""; 
-            DisplayAspectRatio = ""; 
-            FrameRate = ""; 
-            BitDepth = ""; 
-            PixelAspectRatio = ""; 
-            Encoded_Library = ""; 
-            FrameCount = ""; 
-            AudioFormat = ""; 
-            AudioBitRate = ""; 
-            AudioSamplingRate = ""; 
-            Channel = ""; 
-            Extension = ""; 
+            Format = "";
+            BitRate = "";
+            Duration = "";
+            FileSize = "";
+            Width = "";
+            Height = "";
+            Resolution = "";
+            DisplayAspectRatio = "";
+            FrameRate = "";
+            BitDepth = "";
+            PixelAspectRatio = "";
+            Encoded_Library = "";
+            FrameCount = "";
+            AudioFormat = "";
+            AudioBitRate = "";
+            AudioSamplingRate = "";
+            Channel = "";
+            Extension = "";
             FileName = "";
         }
 
@@ -422,7 +422,7 @@ namespace Jvedio
     public class Actress : INotifyPropertyChanged, IDisposable
     {
 
-        public Actress():this("") {  }
+        public Actress() : this("") { }
 
         public Actress(string name = "")
         {
@@ -652,16 +652,16 @@ namespace Jvedio
         }
 
 
-        public Server() 
+        public Server()
         {
 
         }
 
 
-        private bool isEnable=false;
-        private string url="";
+        private bool isEnable = false;
+        private string url = "";
         private string cookie = "";
-        private int available=0;//指示测试是否通过
+        private int available = 0;//指示测试是否通过
         private string name = "";
         private string lastRefreshDate = "";
 

@@ -11,6 +11,41 @@ namespace Jvedio
     public static class FileHelper
     {
 
+        public static string[] TryGetAllFiles(string path,string pattern)
+        {
+            if (Directory.Exists(path))
+            {
+                try
+                {
+                    return Directory.GetFiles(path, pattern,SearchOption.TopDirectoryOnly);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogF(ex);
+                }
+            }
+            return null;
+        }
+
+        public static string TryLoadFile(string path)
+        {
+            if (File.Exists(path))
+            {
+                try
+                {
+                    using (StreamReader sr = new StreamReader(path))
+                    {
+                        return sr.ReadToEnd();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogF(ex);
+                }
+            }
+            return "";
+        }
+
         public static bool TryCreateDir(string path)
         {
             if (!Directory.Exists(path))

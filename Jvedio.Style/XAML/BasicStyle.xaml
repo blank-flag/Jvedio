@@ -4,6 +4,7 @@
 
     <!--Converter-->
     <converter:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
+    <converter:MyColorToBrushConverter x:Key="MyColorToBrushConverter" />
     <converter:BoolToOppositeVisibilityConverter x:Key="BoolToOppositeVisibilityConverter" />
     <converter:SmallerThicknessConverter x:Key="SmallerThicknessConverter" />
     <converter:OppositeBooleanConverter x:Key="OppositeBooleanConverter" />

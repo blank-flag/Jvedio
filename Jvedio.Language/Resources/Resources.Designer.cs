@@ -358,6 +358,15 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
+        ///   查找类似 作者 的本地化字符串。
+        /// </summary>
+        public static string Author {
+            get {
+                return ResourceManager.GetString("Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 自动添加前缀 的本地化字符串。
         /// </summary>
         public static string AutoAddPrefix {
@@ -966,6 +975,15 @@ namespace Jvedio.Language {
         public static string DisplayAspectRatio {
             get {
                 return ResourceManager.GetString("DisplayAspectRatio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 自定义 的本地化字符串。
+        /// </summary>
+        public static string DIY {
+            get {
+                return ResourceManager.GetString("DIY", resourceCulture);
             }
         }
         
@@ -2536,6 +2554,15 @@ namespace Jvedio.Language {
         }
         
         /// <summary>
+        ///   查找类似 更多主题 的本地化字符串。
+        /// </summary>
+        public static string MoreThemes {
+            get {
+                return ResourceManager.GetString("MoreThemes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 影片 的本地化字符串。
         /// </summary>
         public static string Movie {
@@ -2658,6 +2685,15 @@ namespace Jvedio.Language {
         public static string MyList {
             get {
                 return ResourceManager.GetString("MyList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 名称 的本地化字符串。
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
             }
         }
         

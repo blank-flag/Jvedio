@@ -1728,4 +1728,16 @@
   <data name="ActressDownloadAttention" xml:space="preserve">
     <value>Note: Synchronization is possible only if it exists on the BUS</value>
   </data>
+  <data name="MoreThemes" xml:space="preserve">
+    <value>More Themes</value>
+  </data>
+  <data name="DIY" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
 </root>
