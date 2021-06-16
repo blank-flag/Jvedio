@@ -2165,8 +2165,8 @@ namespace Jvedio
                 {
                     Movie movie = vieModel.CurrentMovieList[i];
                     string gifpath = System.IO.Path.Combine(BasePicPath, "GIF", $"{movie.id}.gif");
-                    if (movie.GifUri != null && !string.IsNullOrEmpty(movie.GifUri.OriginalString) 
-                        && movie.GifUri.OriginalString.IndexOf("/NoPrinting_G.gif")<0) continue;
+                    if (movie.GifUri != null && !string.IsNullOrEmpty(movie.GifUri.OriginalString)
+                        && movie.GifUri.OriginalString.IndexOf("/NoPrinting_G.gif") < 0) continue;
                     if (File.Exists(gifpath))
                         movie.GifUri = new Uri(gifpath);
                     else
@@ -4072,6 +4072,8 @@ namespace Jvedio
         public void SetSkin()
         {
             FileProcess.SetSkin(Properties.Settings.Default.Themes);
+            if (GlobalFont != null) this.FontFamily = GlobalFont;
+
             switch (Properties.Settings.Default.Themes)
             {
                 case "蓝色":

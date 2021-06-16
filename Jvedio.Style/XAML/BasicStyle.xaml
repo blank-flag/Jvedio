@@ -126,7 +126,7 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="TextAlignment" Value="Left"/>
-        <Setter Property="FontFamily" Value="微软雅黑"/>
+        <!--删除字体-->
         <Setter Property="FontSize" Value="15"/>
         <!--<Setter Property="MinWidth" Value="100"/>-->
         <Setter Property="Margin" Value="10 5"/>
@@ -356,7 +356,7 @@
         <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}"/>
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="FontFamily" Value="微软雅黑"/>
+        <!--删除字体-->
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Template">
             <Setter.Value>

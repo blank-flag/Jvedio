@@ -35,7 +35,7 @@
         <Style x:Key="BaseTextBlock" TargetType="{x:Type TextBlock}">
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="FontFamily" Value="微软雅黑"/>
+            <!--删除字体-->
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Margin" Value="0,5,0,5"/>
             <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>

@@ -242,7 +242,7 @@ namespace Jvedio.Comics
             Resizing = true;
             if (WinState == 0)
             {
-                var anim = new DoubleAnimation(0,1, new Duration(TimeSpan.FromSeconds(0.25)), FillBehavior.Stop);
+                var anim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.25)), FillBehavior.Stop);
                 this.BeginAnimation(UIElement.OpacityProperty, anim);
                 //最大化
                 WinState = JvedioWindowState.Maximized;
@@ -435,6 +435,7 @@ namespace Jvedio.Comics
         public void SetSkin()
         {
             FileProcess.SetSkin(Jvedio.Comics.Properties.Settings.Default.Themes);
+            if (GlobalFont != null) this.FontFamily = GlobalFont;
             switch (Properties.Settings.Default.Themes)
             {
                 case "蓝色":
@@ -477,7 +478,7 @@ namespace Jvedio.Comics
                     break;
                 }
             }
-            
+
 
         }
 

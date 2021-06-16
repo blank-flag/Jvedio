@@ -19,7 +19,7 @@
         <local:HeightConverter x:Key="HeightConverter"/>
 
         <Style x:Key="ViewTextBox" TargetType="TextBox" BasedOn="{StaticResource ReadOnlyTextBox}">
-            <Setter Property="FontFamily" Value="微软雅黑"/>
+            <!--删除字体-->
             <Setter Property="Foreground" Value="{DynamicResource ForegroundSearch}"/>
             <Setter Property="Margin" Value="20 0"/>
             <Setter Property="Width" Value="450"/>

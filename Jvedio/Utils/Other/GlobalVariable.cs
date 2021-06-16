@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Jvedio
@@ -35,6 +36,8 @@ namespace Jvedio
             Properties.Settings.Default.BasePicPath : AppDomain.CurrentDomain.BaseDirectory + "Pic\\";
         public static string[] InitDirs = new[] { "log", "DataBase", "BackUp", "Pic", "Plugins/Themes", "Plugins/Crawlers" };//初始化文件夹
         public static string[] PicPaths = new[] { "ScreenShot", "SmallPic", "BigPic", "ExtraPic", "Actresses", "Gif" };
+
+        public static string[] FontExt = new[] { ".otf", ".ttf" };
 
 
 
@@ -98,6 +101,8 @@ namespace Jvedio
 
         public static string AIDataBasePath = AppDomain.CurrentDomain.BaseDirectory + "AI.sqlite";
         public static string TranslateDataBasePath = AppDomain.CurrentDomain.BaseDirectory + "Translate.sqlite";
+
+        public static FontFamily GlobalFont = null;
 
         #region "热键"
         [DllImport("user32.dll")]

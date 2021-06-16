@@ -600,7 +600,7 @@ namespace Jvedio
                 result.Add("title", titleNode.InnerText.Replace(ID, " ").Substring(1));
             }
 
-            HtmlNodeCollection infoNodes = doc.DocumentNode.SelectNodes("//nav[@class='panel video-panel-info']/div");
+            HtmlNodeCollection infoNodes = doc.DocumentNode.SelectNodes("//nav[@class='panel movie-panel-info']/div");
             if (infoNodes != null)
             {
 

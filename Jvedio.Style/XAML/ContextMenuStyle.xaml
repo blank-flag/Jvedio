@@ -13,7 +13,7 @@
     <!--contextmenu 样式-->
     <Style   TargetType="ContextMenu">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="FontFamily" Value="微软雅黑"/>
+        <!--删除字体-->
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Grid.IsSharedSizeScope" Value="true" />
@@ -41,7 +41,7 @@
     <!--MenuItem-->
     <Style    TargetType="MenuItem">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="FontFamily" Value="微软雅黑"/>
+        <!--删除字体-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="MenuItem">

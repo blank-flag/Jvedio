@@ -30,7 +30,7 @@
 
     <Style x:Key="HoverButton" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="FontFamily" Value="微软雅黑"/>
+        <!--删除字体-->
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Width" Value="auto"/>

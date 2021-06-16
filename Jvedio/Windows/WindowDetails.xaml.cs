@@ -133,6 +133,9 @@ namespace Jvedio
             ScreenShotRadioButton.Opacity = 0.7;
             NextBorder.Opacity = 0.7;
             PreviousBorder.Opacity = 0.7;
+
+            //设置字体
+            if (GlobalFont != null) this.FontFamily = GlobalFont;
         }
 
 

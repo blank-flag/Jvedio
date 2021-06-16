@@ -1,5 +1,6 @@
 ﻿using ExCSS;
 using Jvedio.Core.pojo;
+using Jvedio.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -84,9 +85,19 @@ namespace Jvedio.Core
             string fontPath = Path.Combine(path, "fonts");
             if (Directory.Exists(fontPath))
             {
-                string[] fontfiles = FileHelper.TryGetAllFiles(fontPath, "*.ttf");
+                string[] fontfiles = FileHelper.TryGetAllFiles(fontPath, "*.*");
                 if (fontfiles.Length > 0)
-                    theme.Font = Path.Combine(fontPath, fontfiles[0]);
+                {
+                    foreach (var fontfile in fontfiles)
+                    {
+                        if (fontfile.IndexOfAnyString(GlobalVariable.FontExt) > 0)
+                        {
+                            theme.Font = Path.Combine(fontPath, fontfile);
+                        }
+                    }
+
+                }
+
             }
 
             parseJson(ref theme, Path.Combine(path, "index.json"));

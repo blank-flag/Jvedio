@@ -80,6 +80,7 @@ namespace Jvedio
 
             Jvedio.Core.ThemeLoader.loadAllThemes();
             SetSkin(Properties.Settings.Default.Themes);
+            if (GlobalFont != null) this.FontFamily = GlobalFont;
             try
             {
                 statusText.Text = Jvedio.Language.Resources.Status_InitDatabase;

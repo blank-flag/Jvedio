@@ -38,6 +38,14 @@ namespace Jvedio
             Application.Current.Resources["Color_ForegroundSearch"] = theme.DisplayProperty.Search.MainForeground;
             Application.Current.Resources["Color_BorderBursh"] = Colors.Transparent;
 
+            //设置字体
+            if (theme.Font != null)
+            {
+                var fonts = Fonts.GetFontFamilies(new Uri(theme.Font));
+                if (fonts != null && fonts.Count >= 1) GlobalFont = fonts.First();
+            }
+
+            //Console.WriteLine(fonts);
 
             //if (theme == "黑色")
             //{
@@ -88,6 +96,8 @@ namespace Jvedio
             Application.Current.Resources["ForegroundGlobal"] = new SolidColorBrush((Color)Application.Current.Resources["Color_ForegroundGlobal"]);
             Application.Current.Resources["ForegroundSearch"] = new SolidColorBrush((Color)Application.Current.Resources["Color_ForegroundSearch"]);
             Application.Current.Resources["BorderBursh"] = new SolidColorBrush((Color)Application.Current.Resources["Color_BorderBursh"]);
+
+
 
         }
         public static Window GetWindowByName(string name)

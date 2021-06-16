@@ -176,6 +176,7 @@ namespace Jvedio.Comics
                 if (!Directory.Exists("DataBase\\Comics")) { Directory.CreateDirectory("DataBase\\Comics"); }            //创建 DataBase 文件夹
                 if (!Directory.Exists("BackUp")) { Directory.CreateDirectory("BackUp"); }            //创建备份文件夹
                 SetSkin(Properties.Settings.Default.Themes);
+                if (GlobalFont != null) this.FontFamily = GlobalFont;
             }
             catch (Exception ex)
             {

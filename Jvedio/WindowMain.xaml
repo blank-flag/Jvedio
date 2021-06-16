@@ -1388,8 +1388,7 @@
                                                                                 TextAlignment="Left"  
                                                                                        Visibility="{Binding Path=DisplayID,Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default},Mode=OneWay}" 
                                                                                        Width="auto" HorizontalAlignment="Left" 
-                                                                                       Grid.Column="0" FontSize="18" 
-                                                                                       FontFamily="Times New Roman"      
+                                                                                       Grid.Column="0" FontSize="18"    
                                                                                        Text="{Binding id,Mode=OneWay}"    
                                                                                        
                                                                                        Foreground="{DynamicResource ForegroundSearch}"  
@@ -1412,7 +1411,6 @@
                                                                                  Visibility="{Binding Path=DisplayDate,Converter={StaticResource BoolToVis}, Source={x:Static p:Settings.Default},Mode=OneWay}" 
       
                                                                                  FontSize="15"  
-                                                                                 FontFamily="Times New Roman"      
                                                                                  Opacity="0.5"      
                                                                                  Text="{Binding releasedate,Mode=OneWay}"    
                                                                                  Foreground="{DynamicResource ForegroundSearch}"  

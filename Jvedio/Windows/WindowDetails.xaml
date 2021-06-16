@@ -70,7 +70,7 @@
         <Style x:Key="ViewTextBox" TargetType="TextBox" BasedOn="{StaticResource ReadOnlyWrapTextBox}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontFamily" Value="微软雅黑"/>
+            <!--删除字体-->
             <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}"/>
             <Setter Property="ContextMenu" Value="{StaticResource CopyContextMenu}"/>
             <Setter Property="Margin" Value="0 5"/>
@@ -82,7 +82,7 @@
         <Style x:Key="BaseTextBlock" TargetType="TextBlock">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontFamily" Value="微软雅黑"/>
+            <!--删除字体-->
             <Setter Property="Foreground" Value="{DynamicResource ForegroundGlobal}"/>
             <Setter Property="Margin" Value="0 0"/>
             <Setter Property="Opacity" Value="0.9"/>
