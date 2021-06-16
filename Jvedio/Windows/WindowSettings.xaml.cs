@@ -53,12 +53,14 @@ namespace Jvedio
         public Settings()
         {
             InitializeComponent();
-
+            if (GlobalFont != null) this.FontFamily = GlobalFont;
             vieModel_Settings = new VieModel_Settings();
 
 
             this.DataContext = vieModel_Settings;
             vieModel_Settings.Reset();
+
+
 
             //绑定事件
             foreach (var item in CheckedBoxWrapPanel.Children.OfType<ToggleButton>().ToList())
@@ -702,14 +704,35 @@ namespace Jvedio
                 }
             }
 
-            //设置皮肤选中
-            var rbs = SkinWrapPanel.Children.OfType<RadioButton>().ToList();
-            foreach (RadioButton item in rbs)
+            //设置主题选中
+            bool findTheme = false;
+            foreach (var item in SkinWrapPanel.Children.OfType<RadioButton>())
             {
                 if (item.Content.ToString() == Properties.Settings.Default.Themes)
                 {
                     item.IsChecked = true;
-                    return;
+                    findTheme = true;
+                    break;
+                }
+            }
+            if (!findTheme)
+            {
+                for (int i = 0; i < ThemesDataGrid.Items.Count; i++)
+                {
+                    DataGridRow row = (DataGridRow)ThemesDataGrid.ItemContainerGenerator.ContainerFromItem(ThemesDataGrid.Items[i]);
+                    if (row != null)
+                    {
+                        var cell = ThemesDataGrid.Columns[0];
+                        var cp = (ContentPresenter)cell?.GetCellContent(row);
+                        RadioButton rb = (RadioButton)cp?.ContentTemplate.FindName("rb", cp);
+                        if (rb != null && rb.Content.ToString() == Properties.Settings.Default.Themes)
+                        {
+                            rb.IsChecked = true;
+
+                            break;
+                        }
+                    }
+
                 }
             }
 

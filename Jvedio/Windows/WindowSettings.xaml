@@ -534,7 +534,7 @@
                                 <DataGridTemplateColumn Header="{x:Static lang:Resources.Enable}" Width="auto" MinWidth="40"   >
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <RadioButton  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"   Content="{Binding Name,Mode=OneWay}" Background="{Binding DisplayProperty.Title.MainBackground,Mode=OneWay,Converter={StaticResource MyColorToBrushConverter}}"  Style="{StaticResource ColorRadioButton}"  />
+                                            <RadioButton Name="rb"  FocusVisualStyle="{x:Null}"    GroupName="SkinRadioButton"  Click="SetSkin"   Content="{Binding Name,Mode=OneWay}" Background="{Binding DisplayProperty.Title.MainBackground,Mode=OneWay,Converter={StaticResource MyColorToBrushConverter}}"  Style="{StaticResource ColorRadioButton}"  />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

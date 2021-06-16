@@ -181,6 +181,7 @@ namespace Jvedio.Style
         private void InitStyle()
         {
             this.Style = (System.Windows.Style)App.Current.Resources["BaseWindowStyle"];
+
         }
 
         private void InitEvent()

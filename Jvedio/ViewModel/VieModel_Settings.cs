@@ -30,6 +30,9 @@ namespace Jvedio.ViewModel
                 if (theme.Name == Skin.白色.ToString() || theme.Name == Skin.黑色.ToString() || theme.Name == Skin.蓝色.ToString()) continue;
                 ThemeList.Add(theme);
             }
+
+
+
         }
 
 
@@ -108,7 +111,7 @@ namespace Jvedio.ViewModel
         }
 
 
-        private Skin _Themes = (Skin)Enum.Parse(typeof(Skin), Properties.Settings.Default.Themes, true);
+        private Skin _Themes = (Skin)Enum.Parse(typeof(Skin), "黑色", true);
 
         public Skin Themes
         {

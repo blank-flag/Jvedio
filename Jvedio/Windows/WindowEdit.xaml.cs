@@ -26,6 +26,7 @@ namespace Jvedio
         public WindowEdit(string id = "")
         {
             InitializeComponent();
+            if (GlobalVariable.GlobalFont != null) this.FontFamily = GlobalVariable.GlobalFont;//设置字体
             ID = id;
             vieModel = new VieModel_Edit();
 

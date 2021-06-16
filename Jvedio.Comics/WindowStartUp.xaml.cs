@@ -229,17 +229,19 @@ namespace Jvedio.Comics
 
         public void CheckSettings()
         {
-            if (!Enum.IsDefined(typeof(Skin), Properties.Settings.Default.Themes))
-            {
-                Properties.Settings.Default.Themes = Skin.黑色.ToString();
-                Properties.Settings.Default.Save();
-            }
 
-            if (!Enum.IsDefined(typeof(MyLanguage), Properties.Settings.Default.Language))
-            {
-                Properties.Settings.Default.Language = MyLanguage.中文.ToString();
-                Properties.Settings.Default.Save();
-            }
+            //TODO 主题增加后产生的问题
+            //if (!Enum.IsDefined(typeof(Skin), Properties.Settings.Default.Themes))
+            //{
+            //    Properties.Settings.Default.Themes = Skin.黑色.ToString();
+            //    Properties.Settings.Default.Save();
+            //}
+
+            //if (!Enum.IsDefined(typeof(MyLanguage), Properties.Settings.Default.Language))
+            //{
+            //    Properties.Settings.Default.Language = MyLanguage.中文.ToString();
+            //    Properties.Settings.Default.Save();
+            //}
 
         }
 

@@ -15,6 +15,7 @@ namespace Jvedio
         public Msgbox(Window window, string text)
         {
             InitializeComponent();
+            if (GlobalVariable.GlobalFont != null) this.FontFamily = GlobalVariable.GlobalFont;//设置字体
             Text = text;
 
             TextBlock.Text = text;

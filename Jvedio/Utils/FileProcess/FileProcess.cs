@@ -39,10 +39,15 @@ namespace Jvedio
             Application.Current.Resources["Color_BorderBursh"] = Colors.Transparent;
 
             //设置字体
+            GlobalFont = new FontFamily("微软雅黑");
             if (theme.Font != null)
             {
                 var fonts = Fonts.GetFontFamilies(new Uri(theme.Font));
                 if (fonts != null && fonts.Count >= 1) GlobalFont = fonts.First();
+            }
+            foreach (Window window in App.Current.Windows)
+            {
+                window.FontFamily = GlobalFont;
             }
 
             //Console.WriteLine(fonts);

@@ -4072,8 +4072,7 @@ namespace Jvedio
         public void SetSkin()
         {
             FileProcess.SetSkin(Properties.Settings.Default.Themes);
-            if (GlobalFont != null) this.FontFamily = GlobalFont;
-
+            SettingsBorder.ContextMenu.UpdateDefaultStyle();//设置弹出的菜单正确显示
             switch (Properties.Settings.Default.Themes)
             {
                 case "蓝色":

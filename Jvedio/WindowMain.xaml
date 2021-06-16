@@ -254,7 +254,7 @@
                                 </Grid.ColumnDefinitions>
                                 <ComboBox SelectedIndex="{Binding DatabaseSelectedIndex,FallbackValue=0}" Grid.Column="0" FontSize="16"  Style="{StaticResource SideComboBoxStyle}"  Margin="5"  SelectionChanged="DatabaseComboBox_SelectionChanged"  ItemsSource="{Binding DataBases}"   MinWidth="150"  Height="30"  ToolTip="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}" HorizontalAlignment="Stretch" />
 
-                                <Border ContextMenu="{StaticResource SettingsContextMenu}" Grid.Column="1"  ToolTip="{x:Static lang:Resources.Settings}"   Width="27" Height="27"  Margin="5 0"  CornerRadius="3" Style="{StaticResource BorderStyle}"  MouseUp="ShowSettingsPopup">
+                                <Border x:Name="SettingsBorder" ContextMenu="{StaticResource SettingsContextMenu}" Grid.Column="1"  ToolTip="{x:Static lang:Resources.Settings}"   Width="27" Height="27"  Margin="5 0"  CornerRadius="3" Style="{StaticResource BorderStyle}"  MouseUp="ShowSettingsPopup">
                                     <Image  Source="{Binding Themes, Mode=OneWay, ConverterParameter=menu,Converter={StaticResource StringToUriStringConverter}, Source={x:Static p:Settings.Default}}"  Margin="4"    />
                                 </Border>
 

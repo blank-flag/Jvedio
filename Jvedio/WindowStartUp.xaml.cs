@@ -258,17 +258,18 @@ namespace Jvedio
             statusText.Text = Jvedio.Language.Resources.Status_RepairConfig;
             try
             {
-                if (!Enum.IsDefined(typeof(Skin), Properties.Settings.Default.Themes))
-                {
-                    Properties.Settings.Default.Themes = Skin.黑色.ToString();
-                    Properties.Settings.Default.Save();
-                }
+                //TODO
+                //if (!Enum.IsDefined(typeof(Skin), Properties.Settings.Default.Themes))
+                //{
+                //    Properties.Settings.Default.Themes = Skin.黑色.ToString();
+                //    Properties.Settings.Default.Save();
+                //}
 
-                if (!Enum.IsDefined(typeof(MyLanguage), Properties.Settings.Default.Language))
-                {
-                    Properties.Settings.Default.Language = MyLanguage.中文.ToString();
-                    Properties.Settings.Default.Save();
-                }
+                //if (!Enum.IsDefined(typeof(MyLanguage), Properties.Settings.Default.Language))
+                //{
+                //    Properties.Settings.Default.Language = MyLanguage.中文.ToString();
+                //    Properties.Settings.Default.Save();
+                //}
             }
             catch (Exception ex)
             {

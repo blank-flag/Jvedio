@@ -17,6 +17,9 @@ namespace Jvedio
 {
     public static class GlobalVariable
     {
+        public delegate void ThemeChangeHandler();
+        public static event ThemeChangeHandler ThemeChange;
+
         public static readonly string ReleaseUrl = "https://github.com/hitchao/Jvedio/releases";
         public static readonly string YoudaoUrl = "https://github.com/hitchao/Jvedio/wiki/HowToSetYoudaoTranslation";
         public static readonly string BaiduUrl = "https://github.com/hitchao/Jvedio/wiki/HowToSetBaiduAI";

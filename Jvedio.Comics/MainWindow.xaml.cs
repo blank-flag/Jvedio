@@ -435,7 +435,7 @@ namespace Jvedio.Comics
         public void SetSkin()
         {
             FileProcess.SetSkin(Jvedio.Comics.Properties.Settings.Default.Themes);
-            if (GlobalFont != null) this.FontFamily = GlobalFont;
+            //if (GlobalFont != null) this.FontFamily = GlobalFont;
             switch (Properties.Settings.Default.Themes)
             {
                 case "蓝色":

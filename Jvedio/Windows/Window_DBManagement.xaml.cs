@@ -36,7 +36,7 @@ namespace Jvedio
         public Window_DBManagement()
         {
             InitializeComponent();
-
+            if (GlobalVariable.GlobalFont != null) this.FontFamily = GlobalVariable.GlobalFont;//设置字体
             vieModel_DBManagement = new VieModel_DBManagement();
             vieModel_DBManagement.ListDatabase();
 

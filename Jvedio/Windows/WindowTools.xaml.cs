@@ -33,6 +33,7 @@ namespace Jvedio
         public WindowTools()
         {
             InitializeComponent();
+            if (GlobalVariable.GlobalFont != null) this.FontFamily = GlobalVariable.GlobalFont;//设置字体
             //WinState = 0;//每次重新打开窗体默认为Normal
             vieModel = new VieModel_Tools();
             this.DataContext = vieModel;

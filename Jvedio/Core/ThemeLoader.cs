@@ -39,10 +39,6 @@ namespace Jvedio.Core
          */
 
 
-
-
-
-        private static string ThemeName { get; set; }
         public static List<Theme> Themes { get; set; }
 
         private static readonly string ThemePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins\\Themes");
@@ -72,7 +68,7 @@ namespace Jvedio.Core
             {
                 return getThemeFromPath(path);
             }
-            return null;
+            return new Theme();
         }
 
         private static Theme getThemeFromPath(string path)

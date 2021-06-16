@@ -28,8 +28,9 @@ namespace Jvedio
         public Window_ScreenShot(Window owner, ImageSource source)
         {
             InitializeComponent();
+            if (GlobalVariable.GlobalFont != null) this.FontFamily = GlobalVariable.GlobalFont;//设置字体
             this.Owner = owner;
-            ImageViewer.Source= source;
+            ImageViewer.Source = source;
             //this.Width = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width/2;
             //this.Height = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height/2;
             //this.Top = 0;
@@ -74,7 +75,7 @@ namespace Jvedio
 
         private void Grid_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape) 
+            if (e.Key == Key.Escape)
                 this.Close();
         }
 
@@ -84,17 +85,17 @@ namespace Jvedio
         int mouseDownCount = 0;
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            mouseDownCount ++;
+            mouseDownCount++;
             if (e.GetPosition(Rectangle1).X > 0 && e.GetPosition(Rectangle1).X < Rectangle1.Width &&
     e.GetPosition(Rectangle1).Y > 0 && e.GetPosition(Rectangle1).Y < Rectangle1.Height)
             {
                 canMove = true;
             }
 
-                
+
             CutImage.Source = null;
             rectangle = new Point(Canvas.GetLeft(Rectangle1), Canvas.GetTop(Rectangle1));
-            startPoint =e.GetPosition(this);
+            startPoint = e.GetPosition(this);
             Canvas1.Visibility = Visibility.Visible;
         }
 
@@ -109,11 +110,11 @@ namespace Jvedio
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
             //画矩形
-            if (mouseDownCount==1)
+            if (mouseDownCount == 1)
             {
-                
+
                 double width = e.GetPosition(this).X - startPoint.X;
-                double height= e.GetPosition(this).Y - startPoint.Y;
+                double height = e.GetPosition(this).Y - startPoint.Y;
                 Rectangle1.Width = Math.Abs(width);
                 Rectangle1.Height = Math.Abs(height);
 
@@ -122,16 +123,16 @@ namespace Jvedio
                 else
                     Canvas.SetLeft(Rectangle1, e.GetPosition(this).X);
 
-                if(height>=0)
+                if (height >= 0)
                     Canvas.SetTop(Rectangle1, startPoint.Y);
                 else
                     Canvas.SetTop(Rectangle1, e.GetPosition(this).Y);
 
                 SetImage();
             }
-            else if(canMove && mouseDownCount>=2 )
+            else if (canMove && mouseDownCount >= 2)
             {
-                if(e.GetPosition(Rectangle1).X>0 && e.GetPosition(Rectangle1).X <Rectangle1.Width && 
+                if (e.GetPosition(Rectangle1).X > 0 && e.GetPosition(Rectangle1).X < Rectangle1.Width &&
                     e.GetPosition(Rectangle1).Y > 0 && e.GetPosition(Rectangle1).Y < Rectangle1.Height)
                 {
                     //移动矩形
@@ -145,7 +146,8 @@ namespace Jvedio
 
                 Console.WriteLine("---1---");
 
-            }else if (canChangeSize)
+            }
+            else if (canChangeSize)
             {
                 //调整矩形大小
                 double height = e.GetPosition(this).Y - Canvas.GetTop(Rectangle1);
@@ -192,12 +194,13 @@ namespace Jvedio
                     return new CroppedBitmap(imageSource, rect);
                 else
                     return null;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return null;
             }
-                
-            
+
+
 
         }
 
@@ -210,7 +213,7 @@ namespace Jvedio
 
         private void CutImage_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (mouseDownCount>=2)
+            if (mouseDownCount >= 2)
                 this.Cursor = Cursors.SizeAll;
         }
 
@@ -229,7 +232,7 @@ namespace Jvedio
             if (canChangeSize)
             {
                 double height = e.GetPosition(this).Y - Canvas.GetTop(Rectangle1);
-                
+
                 if (height < 0)
                 {
                     Canvas.SetTop(Rectangle1, e.GetPosition(this).Y);

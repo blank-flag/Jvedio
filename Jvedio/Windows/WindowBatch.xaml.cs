@@ -29,7 +29,7 @@ namespace Jvedio
     /// <summary>
     /// Settings.xaml 的交互逻辑
     /// </summary>
-    public partial class WindowBatch :  BaseWindow
+    public partial class WindowBatch : BaseWindow
     {
         public VieModel_Batch vieModel;
 
@@ -66,6 +66,7 @@ namespace Jvedio
         public WindowBatch()
         {
             InitializeComponent();
+            if (GlobalVariable.GlobalFont != null) this.FontFamily = GlobalVariable.GlobalFont;//设置字体
             cts = new CancellationTokenSource();
             cts.Token.Register(() => { HandyControl.Controls.Growl.Info(Jvedio.Language.Resources.Cancel, "BatchGrowl"); });
             ct = cts.Token;
@@ -398,7 +399,7 @@ namespace Jvedio
                for (int i = 0; i < vieModel.TotalNum; i++)
                {
                    if (CheckPause()) break;
-                    await DownLoad(vieModel.Movies[i]);
+                   await DownLoad(vieModel.Movies[i]);
 
                }
            }, ct);
@@ -506,7 +507,7 @@ namespace Jvedio
             vieModel.Progress = 0;
 
             bool success = await ResetTask(cts);
-            if (success && Running && vieModel.Movies != null && vieModel.TotalNum!=0)
+            if (success && Running && vieModel.Movies != null && vieModel.TotalNum != 0)
             {
                 WaitingPanel.Visibility = Visibility.Hidden;
                 PauseButton.IsEnabled = true;
@@ -557,10 +558,12 @@ namespace Jvedio
                     try
                     {
                         File.Move(movie.subsectionlist[i], newPath[i]);
-                    }catch(Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         Logger.LogF(ex);
-                        continue; 
-                    }                    
+                        continue;
+                    }
                 }
                 movie.filepath = newPath[0];
                 movie.subsection = string.Join(";", newPath);
@@ -625,7 +628,7 @@ namespace Jvedio
             Properties.Settings.Default.Save();
         }
 
-        private async Task<bool> ResetTask(CancellationTokenSource cts=null)
+        private async Task<bool> ResetTask(CancellationTokenSource cts = null)
         {
             int idx = TabControl.SelectedIndex;
             WaitingPanel.Visibility = Visibility.Visible;
@@ -634,7 +637,7 @@ namespace Jvedio
                 return vieModel.Reset(idx, (message) =>
                 {
                     Dispatcher.BeginInvoke((Action)delegate { WaitingPanel.Visibility = Visibility.Collapsed; });
-                },cts);
+                }, cts);
             });
         }
 
@@ -645,7 +648,7 @@ namespace Jvedio
         }
 
 
-        private  void Jvedio_BaseWindow_ContentRendered(object sender, EventArgs e)
+        private void Jvedio_BaseWindow_ContentRendered(object sender, EventArgs e)
         {
 
             vieModel = new VieModel_Batch();
