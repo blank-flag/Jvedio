@@ -180,16 +180,6 @@ namespace Jvedio.Core
             return System.Windows.Media.Color.FromRgb(r, g, b);
         }
 
-
-
-        private static void initThemeMaps()
-        {
-            FileHelper.TryCreateDir(ThemePath);
-        }
-
-        public static void loadThemeByPathName(string pathName)
-        {
-        }
     }
 
 
