@@ -70,11 +70,20 @@ namespace Jvedio {
         }
         
         /// <summary>
-        ///   查找类似 SMBD,SMDV,BT,CCDV,CWDV,CWP,CWPBD,CWPD,CYC,DRC,DRG,DRGBD,DSAM,DSAMBD,DSAMD,HEY,HEYDOUGA,HEYZO,KP,KSC,LAF,LAFBD,LLDV,MCBD,MKBD,MKD,MXX,NIP,PT,RED,RHJ,S2M,S2MBD,S2MCR,SKY,SKYHD,SMD,SSDV,SSKP,FC2PPV,FC2,GACHI,GACHIG,NALGASCLUB,LL,KG,HAMESAMURAI,GACHIP 的本地化字符串。
+        ///   查找类似 ABBA,ABP,ABS,AD,ADN,ADV,ADVF,ADVO,ADZ,AED,AEDVD,AGEMIX,AJVR,AKHO,ALB,ALD,AMBI,AMD,ANB,AND,ANND,ANX,ANZI,AOZ,AP,APAA,APAK,APKH,APNS,ARA,ARATHD,ARD,ARM,ARMD,ARMG,ARN,ARSO,ASFB,AST,ASW,ATAD,ATFB,ATID,ATKD,ATOM,AUKG,AUKS,AV,AVD,AVGP,AVKH,AVOP,AVOPVR,AVSA,AVVR,AW,AWD,AWT,BAGBD,BAZX,BBAN,BBBN,BBI,BC,BCDP,BCPV,BDA,BDMILD,BDSR,BEB,BF,BGSD,BIB,BIG,BIJN,BIKMVR,BKD,BKSP,BLK,BLOR,BMD,BMVR,BMW,BNDV,BNSPS,BOB,BOBB,BOIN,BOKD,BOMN,BRD,BTD,BTR,BTYD,BUR,C,CABD,CABE,CACA,CADV,CAFR,CAMI,CAND,CAPI,CB,CC,CCX,CEAD,CESD,CETD,CHN,C [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
-        internal static string Uncensored {
+        internal static string Censored {
             get {
-                return ResourceManager.GetString("Uncensored", resourceCulture);
+                return ResourceManager.GetString("Censored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 流出,留出,泄露,泄密,曝光,flowout 的本地化字符串。
+        /// </summary>
+        internal static string FLOWOUT {
+            get {
+                return ResourceManager.GetString("FLOWOUT", resourceCulture);
             }
         }
         
@@ -116,15 +125,6 @@ namespace Jvedio {
         }
         
         /// <summary>
-        ///   查找类似 ABBA,ABP,ABS,AD,ADN,ADV,ADVF,ADVO,ADZ,AED,AEDVD,AGEMIX,AJVR,AKHO,ALB,ALD,AMBI,AMD,ANB,AND,ANND,ANX,ANZI,AOZ,AP,APAA,APAK,APKH,APNS,ARA,ARATHD,ARD,ARM,ARMD,ARMG,ARN,ARSO,ASFB,AST,ASW,ATAD,ATFB,ATID,ATKD,ATOM,AUKG,AUKS,AV,AVD,AVGP,AVKH,AVOP,AVOPVR,AVSA,AVVR,AW,AWD,AWT,BAGBD,BAZX,BBAN,BBBN,BBI,BC,BCDP,BCPV,BDA,BDMILD,BDSR,BEB,BF,BGSD,BIB,BIG,BIJN,BIKMVR,BKD,BKSP,BLK,BLOR,BMD,BMVR,BMW,BNDV,BNSPS,BOB,BOBB,BOIN,BOKD,BOMN,BRD,BTD,BTR,BTYD,BUR,C,CABD,CABE,CACA,CADV,CAFR,CAMI,CAND,CAPI,CB,CC,CCX,CEAD,CESD,CETD,CHN,C [字符串的其余部分被截断]&quot;; 的本地化字符串。
-        /// </summary>
-        internal static string Censored {
-            get {
-                return ResourceManager.GetString("Censored", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 3g2,3gp,3gp2,3gpp,amr,amv,asf,avi,bdmv,bik,d2v,divx,drc,dsa,dsm,dss,dsv,evo,f4v,flc,fli,flic,flv,hdmov,ifo,ivf,m1v,m2p,m2t,m2ts,m2v,m4b,m4p,m4v,mkv,mp2v,mp4,mp4v,mpe,mpeg,mpg,mpls,mpv2,mpv4,mov,mts,ogm,ogv,pss,pva,qt,ram,ratdvd,rm,rmm,rmvb,roq,rpm,smil,smk,swf,tp,tpr,ts,vob,vp6,webm,wm,wmp,wmv,nfo 的本地化字符串。
         /// </summary>
         internal static string ScanVetioType {
@@ -139,6 +139,15 @@ namespace Jvedio {
         internal static string SubSectionFeature {
             get {
                 return ResourceManager.GetString("SubSectionFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 SMBD,SMDV,BT,CCDV,CWDV,CWP,CWPBD,CWPD,CYC,DRC,DRG,DRGBD,DSAM,DSAMBD,DSAMD,HEY,HEYDOUGA,HEYZO,KP,KSC,LAF,LAFBD,LLDV,MCBD,MKBD,MKD,MXX,NIP,PT,RED,RHJ,S2M,S2MBD,S2MCR,SKY,SKYHD,SMD,SSDV,SSKP,FC2PPV,FC2,GACHI,GACHIG,NALGASCLUB,LL,KG,HAMESAMURAI,GACHIP 的本地化字符串。
+        /// </summary>
+        internal static string Uncensored {
+            get {
+                return ResourceManager.GetString("Uncensored", resourceCulture);
             }
         }
     }

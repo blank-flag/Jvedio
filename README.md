@@ -127,14 +127,9 @@ Please See：[Jvedio Introduction](https://github.com/hitchao/Jvedio/wiki)
 
 |Service name| |
 |--|--|
-|BUS|√|
-|BUSEUROPE|√|
-|DB|√|
-|*.CONTENTS.FC2|√|
-|LIBRARY|√|
-|FANZA(DMM)|√|
-|321|√|
-|MOO|√|
+|豆瓣|√|
+|Emby|√|
+
 
 
 ### 6.2 Interface: supports three skins (black, white, blue)
@@ -237,7 +232,6 @@ Please See：[Jvedio Introduction](https://github.com/hitchao/Jvedio/wiki)
 板块|网友
 :--:|:--:
 UI|青萍之末, Engine, Erdon, Erik
-技术支持|[JavGO](https://github.com/javgo-2020/JavGo), [JavSDT](https://github.com/junerain123/javsdt)
 调试|Sheldon, SHAWN, dddsG, EEE, Jion 等人
 赞助支持|小猪培根 等众多网友
 

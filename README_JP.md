@@ -121,14 +121,8 @@ Visual Studioをインストールして開き(これは2019年です）、**Clo
 
 |サーバー名| |
 |--|--|
-|BUS|√|
-|BUSEUROPE|√|
-|DB|√|
-|*.CONTENTS.FC2|√|
-|LIBRARY|√|
-|FANZA(DMM)|√|
-|321|√|
-|MOO|√|
+|豆瓣|√|
+|Emby|√|
 
 
 

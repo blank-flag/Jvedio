@@ -10,9 +10,16 @@ namespace Jvedio
     public static class Identify
     {
         public static double MinHDVFileSize = 2;//多少 GB 视为高清
-        public static string[] FLOWOUT = new string[] { "流出", "留出", "泄露", "泄密", "曝光", "flowout" };
+        
         public static string[] CHS = new string[] { "中字", "中文字幕", "字幕", "中文", "translated", "translate" };
         public static string[] HDV = new string[] { "hd", "high_definition", "high definition", "高清", "2K", "4K", "8K", "16K", "32K" };
+        public static string[] FLOWOUT;
+
+        static Identify()
+        {
+            FLOWOUT=Resource_String.FLOWOUT.Split(',');
+        }
+
 
         public static void InitFanhaoList()
         {

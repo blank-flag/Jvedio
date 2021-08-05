@@ -37,7 +37,315 @@ namespace Jvedio
         public abstract Dictionary<string, string> Parse();
 
     }
+    public class DouBanParse : InfoParse
+    {
+        public DouBanParse(string id, string htmlText, VedioType vedioType) : base(htmlText, id, vedioType) { }
 
+
+        public DouBanParse()
+        {
+
+        }
+
+        public override Dictionary<string, string> Parse()
+        {
+
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            if (string.IsNullOrEmpty(HtmlText)) return result;
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(HtmlText);
+            //基本信息
+            HtmlNodeCollection headerNodes = doc.DocumentNode.SelectNodes("//span[@class='header']");
+            if (headerNodes != null)
+            {
+                foreach (HtmlNode headerNode in headerNodes)
+                {
+                    if (headerNode == null) continue;
+                    string headerText = headerNode.InnerText;
+                    string content = "";
+                    HtmlNode node = null;
+                    HtmlNode linkNode = null;
+                    switch (headerText)
+                    {
+                        case "發行日期:":
+                            node = headerNode.ParentNode; if (node == null) break;
+                            content = node.InnerText;
+                            result.Add("releasedate", Regex.Match(content, "[0-9]{4}-[0-9]{2}-[0-9]{2}").Value);
+                            result.Add("year", Regex.Match(content, "[0-9]{4}").Value);
+                            break;
+                        case "長度:":
+                            node = headerNode.ParentNode; if (node == null) break;
+                            content = node.InnerText;
+                            result.Add("runtime", Regex.Match(content, "[0-9]+").Value);
+                            break;
+                        case "製作商:":
+                            node = headerNode.ParentNode; if (node == null) break;
+                            linkNode = node.SelectSingleNode("a"); if (linkNode == null) break;
+                            content = linkNode.InnerText;
+                            result.Add("studio", content);
+                            break;
+                        case "系列:":
+                            node = headerNode.ParentNode; if (node == null) break;
+                            linkNode = node.SelectSingleNode("a"); if (linkNode == null) break;
+                            content = linkNode.InnerText;
+                            result.Add("tag", content);
+                            break;
+                        case "導演:":
+                            node = headerNode.ParentNode; if (node == null) break;
+                            linkNode = node.SelectSingleNode("a"); if (linkNode == null) break;
+                            content = linkNode.InnerText;
+                            result.Add("director", content);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            //标题
+            HtmlNodeCollection titleNodes = doc.DocumentNode.SelectNodes("//h3");
+            if (titleNodes != null && titleNodes.Count > 0)
+            {
+                if (VedioType == VedioType.欧美)
+                    result.Add("title", titleNodes[0].InnerText.Replace(ID, ""));
+                else
+                {
+                    string title = titleNodes[0].InnerText.ToUpper().Replace(ID.ToUpper(), "");
+                    if (title.StartsWith(" "))
+                        result.Add("title", title.Substring(1));
+                    else
+                        result.Add("title", title);
+                }
+
+            }
+
+
+            //类别、演员
+
+            List<string> actors = new List<string>();
+            List<string> actorsid = new List<string>();
+            HtmlNodeCollection actorsNodes = doc.DocumentNode.SelectNodes("//span[@class='genre']/a");
+            if (actorsNodes != null)
+            {
+                foreach (HtmlNode actorsNode in actorsNodes)
+                {
+                    if (actorsNode == null) continue;
+                    HtmlNode node = actorsNode.ParentNode; if (node == null) continue;
+
+                    if (node.Attributes["onmouseover"] != null)
+                    {
+                        actors.Add(actorsNode.InnerText);//演员
+                        string link = actorsNode.Attributes["href"]?.Value;
+                        if (!string.IsNullOrEmpty(link) && link.IndexOf("/") >= 0)
+                            actorsid.Add(link.Split('/').Last());
+                    }
+                }
+
+            }
+            List<string> genres = new List<string>();
+            HtmlNodeCollection genreNodes = doc.DocumentNode.SelectNodes("//span[@class='genre']/label/a");
+            if (genreNodes != null)
+            {
+                foreach (HtmlNode genreNode in genreNodes)
+                {
+                    genres.Add(genreNode.InnerText);
+                }
+            }
+            result.Add("genre", string.Join(" ", genres));
+
+            if (actors.Count > 0 && actorsid.Count > 0)
+            {
+                result.Add("actor", string.Join("/", actors));
+                result.Add("actorid", string.Join("/", actorsid));
+                List<string> url_a = new List<string>();//演员头像地址
+                foreach (var item in actorsid)
+                {
+                    if (string.IsNullOrEmpty(item)) continue;
+                    if (VedioType == VedioType.骑兵)
+                        url_a.Add($"{JvedioServers.Bus.Url}pics/actress/{item}_a.jpg");
+                    else if (VedioType == VedioType.欧美)
+                        url_a.Add(JvedioServers.BusEurope.Url.Replace("www", "images") + "actress/" + item + "_a.jpg");//https://images.javbus.one/actress/41r_a.jpg
+                    else if (VedioType == VedioType.步兵)
+                        url_a.Add($"{JvedioServers.Bus.Url}imgs/actress/{item}.jpg");
+                }
+                result.Add("actressimageurl", string.Join(";", url_a));
+            }
+
+            //大图
+            string movieid = ""; string bigimageurl = "";
+            HtmlNodeCollection bigimgeNodes = doc.DocumentNode.SelectNodes("//a[@class='bigImage']");
+            if (bigimgeNodes != null && bigimgeNodes.Count > 0)
+            {
+                bigimageurl = bigimgeNodes[0].Attributes["href"]?.Value;
+                if (!string.IsNullOrEmpty(bigimageurl))
+                {
+                    if (bigimageurl.IndexOf("http") < 0) bigimageurl = JvedioServers.Bus.Url + bigimageurl.Substring(1);
+                    result.Add("bigimageurl", bigimageurl);
+                    // => /pics/cover/89co_b.jpg
+                    movieid = bigimageurl.Split('/').Last().Split('.').First().Replace("_b", "");
+                }
+
+
+            }
+
+            //小图
+            if (!string.IsNullOrEmpty(bigimageurl))
+            {
+                if (bigimageurl.IndexOf("pics.dmm.co.jp") >= 0)
+                    result.Add("smallimageurl", bigimageurl.Replace("pl.jpg", "ps.jpg"));
+                else if (!string.IsNullOrEmpty(movieid))
+                {
+                    if ((int)VedioType == 2)
+                        result.Add("smallimageurl", $"{JvedioServers.Bus.Url}pics/thumb/{movieid}.jpg");
+                    else if ((int)VedioType == 1)
+                        result.Add("smallimageurl", $"{JvedioServers.Bus.Url}imgs/thumbs/{movieid}.jpg");
+                    else if ((int)VedioType == 3)
+                        result.Add("smallimageurl", $"{JvedioServers.BusEurope.Url}thumb/" + movieid + ".jpg");
+                }
+            }
+
+            //预览图
+            List<string> url_e = new List<string>();
+            HtmlNodeCollection extrapicNodes = doc.DocumentNode.SelectNodes("//a[@class='sample-box']");
+            if (extrapicNodes != null)
+            {
+                foreach (HtmlNode extrapicNode in extrapicNodes)
+                {
+                    if (extrapicNode == null) continue;
+                    url_e.Add(extrapicNode.Attributes["href"].Value);
+                }
+                result.Add("extraimageurl", string.Join(";", url_e));
+            }
+            return result;
+        }
+
+
+
+
+
+        public async Task<List<Magnet>> ParseMagnet(string bigimage)
+        {
+            List<Magnet> result = new List<Magnet>();
+            if (string.IsNullOrEmpty(HtmlText)) return result;
+
+
+            //通过正则获得 gid
+            Regex gidRex = new Regex(@"var gid = \d+");
+            Regex ucRex = new Regex(@"var uc = \d+");
+            var gidMatch = gidRex.Match(HtmlText);
+            var ucMatch = ucRex.Match(HtmlText);
+            if (gidMatch != null && gidMatch.Length > 0 && ucMatch != null && ucMatch.Length > 0)
+            {
+                string gid = gidMatch.Value.Replace("var gid = ", "");
+                string uc = ucMatch.Value.Replace("var uc = ", "");
+                string url = $"{JvedioServers.Bus.Url}ajax/uncledatoolsbyajax.php?gid={gid}&lang=zh&img={bigimage}&uc={uc}";
+
+                HttpResult httpResult = await new MyNet().Http(url, new CrawlerHeader() { Cookies = JvedioServers.Bus.Cookie });
+                if (httpResult != null && httpResult.SourceCode != "")
+                {
+                    HtmlDocument doc = new HtmlDocument();
+                    doc.LoadHtml(httpResult.SourceCode);
+
+                    //基本信息
+                    HtmlNodeCollection magnetNodes = doc.DocumentNode.SelectNodes("//tr");
+                    foreach (var magnetNode in magnetNodes)
+                    {
+
+                        HtmlNodeCollection tdNodes = magnetNode.SelectNodes("td");
+
+                        if (tdNodes != null && tdNodes.Count == 3)
+                        {
+                            Magnet magnet = new Magnet(ID);
+                            //名称和 tag
+                            HtmlNodeCollection linkNodes = tdNodes[0].SelectNodes("a");
+                            magnet.title = linkNodes[0].InnerText.CleanSqlString();
+                            magnet.link = linkNodes[0].Attributes["href"]?.Value;
+
+                            for (int i = 1; i < linkNodes.Count; i++)
+                            {
+                                magnet.tag.Add(linkNodes[i].InnerText);
+                            }
+
+                            //大小
+                            string size = tdNodes[1].SelectSingleNode("a").InnerText.CleanSqlString();
+                            double filesize = 0;
+                            if (size.EndsWith("GB"))
+                            {
+                                size = size.Replace("GB", "");
+                                double.TryParse(size, out filesize);
+                                filesize = filesize * 1024;//转为 MB
+                            }
+                            else if (size.EndsWith("MB"))
+                            {
+                                size = size.Replace("MB", "");
+                                double.TryParse(size, out filesize);
+                            }
+                            magnet.size = filesize;
+                            //发行日期
+                            magnet.releasedate = tdNodes[2].SelectSingleNode("a").InnerText.CleanSqlString();
+                            if (magnet.link.IndexOf("&") > 0) magnet.link = magnet.link.Split('&')[0];
+                            result.Add(magnet);
+                        }
+                    }
+                }
+            }
+            return result;
+
+        }
+
+
+
+        public static List<Movie> GetMoviesFromPage(string sourceCode)
+        {
+            List<Movie> result = new List<Movie>();
+            if (string.IsNullOrEmpty(sourceCode)) return result;
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(sourceCode);
+            HtmlNodeCollection movieNodes = doc.DocumentNode.SelectNodes("//a[@class='movie-box']");
+            if (movieNodes == null) return result;
+            foreach (HtmlNode movieNode in movieNodes)
+            {
+                Movie movie = new Movie();
+                if (movieNode.Attributes["href"]?.Value != "") movie.sourceurl = movieNode.Attributes["href"].Value;
+
+                HtmlNode smallimage = movieNode.SelectSingleNode("div/img");
+                HtmlNodeCollection htmlNodes = movieNode.SelectNodes("div/span/date");
+                HtmlNode title = movieNode.SelectSingleNode("div/span");
+                HtmlNodeCollection itemtags = movieNode.SelectNodes("div/span/div/button");
+                List<string> tags = new List<string>();
+                //标签
+                if (itemtags != null && itemtags.Count > 0)
+                {
+                    foreach (var item in itemtags)
+                    {
+                        tags.Add(item.InnerText);
+                    }
+                }
+                string titletext = "";
+                if (smallimage != null && smallimage.Attributes["src"]?.Value != "") movie.smallimageurl = smallimage.Attributes["src"].Value;
+                if (title != null && title.InnerText != "") titletext = title.InnerText.Replace("\r", "").Replace("\n", "").Replace("\t", "").Replace(" ", "");
+                //id 和发行日期
+                if (htmlNodes != null && htmlNodes.Count == 2)
+                {
+                    movie.id = htmlNodes[0].InnerText;
+                    movie.releasedate = htmlNodes[1].InnerText;
+                }
+
+                foreach (var item in tags)
+                {
+                    titletext = titletext.Replace(item, "").Replace($"{movie.id}/{movie.releasedate}", "");
+                }
+                movie.title = titletext.Replace("'", "");
+
+                if (!string.IsNullOrEmpty(movie.id))
+                    result.Add(movie);
+            }
+
+
+            return result;
+        }
+
+    }
 
     public class BusParse : InfoParse
     {

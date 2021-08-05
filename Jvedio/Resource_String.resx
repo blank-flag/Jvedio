@@ -145,4 +145,7 @@
   <data name="SubSectionFeature" xml:space="preserve">
     <value>-,_,cd,hd,whole</value>
   </data>
+  <data name="FLOWOUT" xml:space="preserve">
+    <value>流出,留出,泄露,泄密,曝光,flowout</value>
+  </data>
 </root>

@@ -56,6 +56,163 @@ namespace Jvedio
         public abstract Task<HttpResult> Crawl();
 
     }
+    public class DouBanCrawler : Crawler
+    {
+
+
+        public VedioType VedioType { get; set; }
+        public DouBanCrawler(string Id, VedioType vedioType) : base(Id)
+        {
+            VedioType = vedioType;
+            if ((int)vedioType == 3)
+            {
+                Url = JvedioServers.BusEurope.Url + ID.Replace(".", "-");
+            }
+            else
+            {
+                Url = JvedioServers.Bus.Url + ID.ToUpper();
+            }
+
+        }
+
+        public override async Task<HttpResult> Crawl()
+        {
+            if (Url.IsProperUrl()) InitHeaders();
+            httpResult = await new MyNet().Http(Url, headers);
+            if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != null)
+            {
+                FileProcess.SaveInfo(GetInfo(), ID, (int)VedioType);
+                httpResult.Success = true;
+                ParseCookies(httpResult.Headers.SetCookie);
+                Movie movie = DataBase.SelectMovieByID(ID);
+                //保存磁力
+                List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VedioType).ParseMagnet(movie.bigimageurl);
+                if (magnets.Count > 0)
+                    DataBase.SaveMagnets(magnets);
+            }
+            return httpResult;
+        }
+
+        protected override void ParseCookies(string SetCookie)
+        {
+            if (string.IsNullOrEmpty(SetCookie)) return;
+            List<string> Cookies = new List<string>();
+            var values = SetCookie.Split(new char[] { ',', ';' }).ToList();
+            foreach (var item in values)
+            {
+                if (item.IndexOf('=') < 0) continue;
+                string key = item.Split('=')[0];
+                string value = item.Split('=')[1];
+                if (key == "__cfduid" || key == "PHPSESSID" || key == "existmag") Cookies.Add(key + "=" + value);
+            }
+            string cookie = string.Join(";", Cookies);
+            if (VedioType == VedioType.欧美)
+                JvedioServers.BusEurope.Cookie = cookie;
+            else
+                JvedioServers.Bus.Cookie = cookie;
+            JvedioServers.Save();
+        }
+
+
+        protected override void InitHeaders()
+        {
+            headers = new CrawlerHeader() { Cookies = (int)VedioType == 3 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
+        }
+
+
+        protected override Dictionary<string, string> GetInfo()
+        {
+            Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VedioType).Parse();
+            if (Info.Count > 0)
+            {
+                Info.Add("sourceurl", Url);
+                Info.Add("source", "javbus");
+                Task.Delay(Delay.SHORT_3).Wait();
+            }
+            return Info;
+        }
+
+    }
+
+    //https://www.imdb.com/title/tt5462900/?ref_=fn_al_tt_1
+    public class IMDBBanCrawler : Crawler
+    {
+
+
+        public VedioType VedioType { get; set; }
+        public IMDBBanCrawler(string Id, VedioType vedioType) : base(Id)
+        {
+            VedioType = vedioType;
+            if ((int)vedioType == 3)
+            {
+                Url = JvedioServers.BusEurope.Url + ID.Replace(".", "-");
+            }
+            else
+            {
+                Url = JvedioServers.Bus.Url + ID.ToUpper();
+            }
+
+        }
+
+        public override async Task<HttpResult> Crawl()
+        {
+            if (Url.IsProperUrl()) InitHeaders();
+            httpResult = await new MyNet().Http(Url, headers);
+            if (httpResult != null && httpResult.StatusCode == HttpStatusCode.OK && httpResult.SourceCode != null)
+            {
+                FileProcess.SaveInfo(GetInfo(), ID, (int)VedioType);
+                httpResult.Success = true;
+                ParseCookies(httpResult.Headers.SetCookie);
+                Movie movie = DataBase.SelectMovieByID(ID);
+                //保存磁力
+                List<Magnet> magnets = await new BusParse(ID, httpResult.SourceCode, VedioType).ParseMagnet(movie.bigimageurl);
+                if (magnets.Count > 0)
+                    DataBase.SaveMagnets(magnets);
+            }
+            return httpResult;
+        }
+
+        protected override void ParseCookies(string SetCookie)
+        {
+            if (string.IsNullOrEmpty(SetCookie)) return;
+            List<string> Cookies = new List<string>();
+            var values = SetCookie.Split(new char[] { ',', ';' }).ToList();
+            foreach (var item in values)
+            {
+                if (item.IndexOf('=') < 0) continue;
+                string key = item.Split('=')[0];
+                string value = item.Split('=')[1];
+                if (key == "__cfduid" || key == "PHPSESSID" || key == "existmag") Cookies.Add(key + "=" + value);
+            }
+            string cookie = string.Join(";", Cookies);
+            if (VedioType == VedioType.欧美)
+                JvedioServers.BusEurope.Cookie = cookie;
+            else
+                JvedioServers.Bus.Cookie = cookie;
+            JvedioServers.Save();
+        }
+
+
+        protected override void InitHeaders()
+        {
+            headers = new CrawlerHeader() { Cookies = (int)VedioType == 3 ? JvedioServers.BusEurope.Cookie : JvedioServers.Bus.Cookie };
+        }
+
+
+        protected override Dictionary<string, string> GetInfo()
+        {
+            Dictionary<string, string> Info = new BusParse(ID, httpResult.SourceCode, VedioType).Parse();
+            if (Info.Count > 0)
+            {
+                Info.Add("sourceurl", Url);
+                Info.Add("source", "javbus");
+                Task.Delay(Delay.SHORT_3).Wait();
+            }
+            return Info;
+        }
+
+    }
+
 
 
     public class BusCrawler : Crawler
