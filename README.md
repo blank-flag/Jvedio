@@ -1,8 +1,3 @@
-# Due to some personal reasons, Jvedio temporary maintenance, the latest version of the [4.6.0.0](https://github.com/hitchao/Jvedio/releases/tag/Jvedio4.6.0.0),Or download  [other version](https://github.com/hitchao/Jvedio/releases)
-
-
-
-
 
 [中文](README_CHS.md) [English](README.md) [日本語](README_JP.md)
 
@@ -45,7 +40,7 @@ WebSite：[Jvedio](https://hitchao.github.io/JvedioWebPage/) | Download：[Lates
 
 ---
 
-## 1 Background
+# Background
 Jvedio is a video management software that integrates local video recognition and scanning, picture display, screening, and scraping. At present, the similar management software on GitHub includes: [jellyfin](https://github.com/jellyfin/jellyfin), [Emby](https://github.com/MediaBrowser/Emby), and the existing software on the market includes : Extreme Shadow Pie, KODI, PLEX, etc.
 
 |Software|Main Writing Language|Support Platform|
@@ -58,36 +53,18 @@ Jvedio is a video management software that integrates local video recognition an
 |PLEX|?|-|
 
 
-### 1.1 The original intention of the development
 
-With more and more videos stored on the computer, the desire for a good video management software becomes stronger. After using emby and PLEX, I found some **problems**:
-
-- Startup method: start a server first, and then use WEB to manage the software
-- Information storage method: Put pictures and metadata information together in the same directory of the movie, which leads to very troublesome information transfer
-- Interface: The WEB writing interface is efficient and simple, but I really hope that the margins, shadows, zoom behavior, maximize and minimize buttons of the form can be fully customized
-- Function: Data filtering is not rich enough
-- Feelings: lack of a video management software developed by the Chinese
-
-Therefore, I developed Jvedio. In order to deepen my understanding of Jvedio and video management, many functions and modules are written from scratch, including interface, function, crawler, database management, etc.
-
-
-### 1.2 About the code
-
-I haven't studied C# systematically, but I have heard the name of C#, it can do anything, and it is very convenient and simple, so the code I wrote may look crappy, but it does not matter, I know I will continue to grow , Jvedio will also attract more people to come in and continue to optimize and improve, and I can see a bright future.
-
-There are not many obscure things in Jvedio's code. I try to implement a function in the simplest way.
-
-
-## 2 Installation
+# Installation
 
 Jvedio currently does not have an installation package. The software is released and stored as compressed files. After the updated version, if there is no special instructions, you can overwrite the source files after decompression.
 
 
 
-## 3 How To Use？
+# Development
 
-### 3.1 For Developer
-Please install and open Visual Studio (this is 2019), select **Clone Repository**, and fill in the repository location
+## Run the source code
+
+Please install and open Visual Studio 2022, select **Clone Repository**, and fill in the repository location
 
 `https://github.com/hitchao/Jvedio.git`
 
@@ -95,13 +72,14 @@ or use git
 
 `git clone https://github.com/hitchao/Jvedio.git`
 
+Then in Visual Studio, right-click the solution-restore the Nuget package, and finally click Start
 
-### 3.2 Window User
+## Wiki
 
 Please See：[Jvedio Introduction](https://github.com/hitchao/Jvedio/wiki)
 
 
-## 4 Related items
+# Related items
 
 
 |||
@@ -111,18 +89,18 @@ Please See：[Jvedio Introduction](https://github.com/hitchao/Jvedio/wiki)
 |Jvedio upgraded server source|[jvedioupdate](https://github.com/hitchao/jvedioupdate)|
 |Gif control modified in|[WpfAnimatedGif](https://github.com/hitchao/WpfAnimatedGif)|
 
-## 5 Ways to Participate in Contribution
+# Ways to Participate in Contribution
 
 - No sponsorship is required, you are welcome to submit [Pull Request](https://github.com/hitchao/Jvedio/pulls)
 - Welcome to promote Jvedio and let more people use it
 
 
-## 6 Function list
+# Function list
 
 
 
 
-### 6.1 Support Service
+## Support Service
 - Specific website search by themselves
 
 |Service name| |
@@ -132,27 +110,27 @@ Please See：[Jvedio Introduction](https://github.com/hitchao/Jvedio/wiki)
 
 
 
-### 6.2 Interface: supports three skins (black, white, blue)
+## Interface: supports three skins (black, white, blue)
 
 [![Click to view](https://s3.ax1x.com/2021/03/06/6uGSeO.png)](https://s3.ax1x.com/2021/03/06/6uGSeO.png)
 
 [![Click to view](https://s3.ax1x.com/2021/03/06/6uGPFH.png)](https://s3.ax1x.com/2021/03/06/6uGPFH.png)
 
 
-### 6.3 Language: Support Chinese, English, Japanese
+## Language: Support Chinese, English, Japanese
 
 [![Click to view](https://s3.ax1x.com/2021/03/06/6uJaKP.png)](https://s3.ax1x.com/2021/03/06/6uJaKP.png)
 
 [![Click to view](https://s3.ax1x.com/2021/03/06/6uJfbT.png)](https://s3.ax1x.com/2021/03/06/6uJfbT.png)
 
 
-### 6.4 Multi-Video Library Management
+## Multi-Video Library Management
 
 
 [![Click to view](https://s3.ax1x.com/2021/03/06/6uJLKx.png)](https://s3.ax1x.com/2021/03/06/6uJLKx.png)
 
 
-### 6.5 Other functions
+## Other functions
 
 - Picture display mode: thumbnail, poster image, preview image, GIF (may be the only video management software that supports GIF)
 
@@ -224,7 +202,7 @@ Please See：[Jvedio Introduction](https://github.com/hitchao/Jvedio/wiki)
 
 
 
-## 7 Thanks
+# Thanks
 
 **Thanks to the following netizens for their contributions in the development of Jvedio 4.0**, I hope that with your support, `Jvedio` will develop better and better!
 
